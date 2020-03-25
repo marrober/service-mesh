@@ -61,19 +61,24 @@ app.get('/', (request, response) => {
 
 app.get('/call-layers', (request, response) => {
   counter++;
-  messageText = sprintfJS.sprintf("this ip address %-15s", ip.address());
+  messageText = sprintfJS.sprintf("this ip address %-15s .... about to next layer slave request", ip.address());
   var counterMessage = sprintfJS.sprintf("%04d", counter);
+  log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
   if (nextServiceHost != "NONE") {
+    log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceHost);
     sendSlaveRequest("live", function (valid, text) {
       if (valid == true) {
         text = text.replace(/"/g,"");
-        messageText += sprintfJS.sprintf(" ----> next interface ip address %-15s", text);
+        messageText += sprintfJS.sprintf(" ----> next layer ip address %-15s", text);
         console.log(messageText);
         log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
         response.json(messageText);
       }
     });
+  } else {
+    messageText = sprintfJS.sprintf("this ip address %-15s .... next layer message not sent - no more layers. ", ip.address());
+    log.info({app: 'this', phase: 'operational', id: id}, messageText);
   }
 });
 
