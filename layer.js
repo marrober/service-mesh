@@ -28,6 +28,10 @@ var counter = 0;
 var nextServiceHost = process.env.NEXT_LAYER_NAME;
 var nextServicePort = targePort;
 
+if (typeof nextServiceHost == 'undefined') {
+  nextServiceHost = "NONE";
+}
+
 log.info({phase: 'setup', id: id}, "next interface service host : " + nextServiceHost);
 log.info({phase: 'setup', id: id}, "next interface service port : " + nextServicePort);
 
@@ -60,7 +64,7 @@ app.get('/call-layers', (request, response) => {
   messageText = sprintfJS.sprintf("this ip address %-15s", ip.address());
   var counterMessage = sprintfJS.sprintf("%04d", counter);
 
-  if (nextServiceHost != "") {
+  if (nextServiceHost != "NONE") {
     sendSlaveRequest("live", function (valid, text) {
       if (valid == true) {
         text = text.replace(/"/g,"");
