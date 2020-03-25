@@ -61,7 +61,7 @@ app.get('/', (request, response) => {
 
 app.get('/call-layers', (request, response) => {
   counter++;
-  messageText = sprintfJS.sprintf("this ip address %-15s .... about to next layer slave request", ip.address());
+  messageText = sprintfJS.sprintf("this ip address %-15s .... about to send next layer slave request", ip.address());
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
@@ -79,6 +79,7 @@ app.get('/call-layers', (request, response) => {
   } else {
     messageText = sprintfJS.sprintf("this ip address %-15s .... next layer message not sent - no more layers. ", ip.address());
     log.info({app: 'this', phase: 'operational', id: id}, messageText);
+    response.send(messageText + "\n");
   }
 });
 
