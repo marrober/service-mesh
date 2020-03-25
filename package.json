@@ -1,11 +1,11 @@
 {
-  "name": "master-node-application",
+  "name": "layer-node-application",
   "version": "1.0.0",
-  "description": "The master appliction for a micro-service communication example",
-  "main": "./master.js",
+  "description": "The layer appliction - a micro-service communication example",
+  "main": "./layer.js",
   "private": true,
   "scripts": {
-    "start": "node ./master.js"
+    "start": "node ./layer.js"
   },
   "dependencies": {
     "bunyan": "^1.8.12",
