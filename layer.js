@@ -95,7 +95,7 @@ app.get('/call-layers', (request, response) => {
     sendNextRequest("live", function (valid, text) {
       if (valid == true) {
         text = text.replace(/"/g,"");
-        messageText += " ----> next layer ".contact(text);
+        messageText += " ----> next layer ".concat(text);
         console.log(messageText);
         log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
         response.json(messageText);
