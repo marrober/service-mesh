@@ -86,7 +86,7 @@ app.get('/', (request, response) => {
 
 app.get('/call-layers', (request, response) => {
   counter++;
-  messageText = "From ".concat(ip.address());
+  messageText = ip.address();
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
