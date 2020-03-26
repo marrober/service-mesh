@@ -33,18 +33,16 @@ console.log("Application is starting......");
 var counter = 0;
 
 var nextServiceHost = "";
+var nextServiceHostEnvName = "";
 
 var serviceName = process.env.NEXT_LAYER_NAME;
 console.log(serviceName);
-console.log(typeof serviceName);
-
-var nextServiceHostEnvName = "";
 
 if (typeof serviceName == 'undefined') {
   nextServiceHost = "NONE";
 } else {
   var nextServiceHostEnvName = serviceName.toUpperCase().concat("_SERVICE_HOST");
-  nextServiceHostEnvName.replace('-', '_');
+  nextServiceHostEnvName = nextServiceHostEnvName.replace('-', '_');
 
   console.log(nextServiceHostEnvName);
   nextServiceHost = process.env[nextServiceHostEnvName];
