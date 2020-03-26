@@ -35,8 +35,8 @@ var counter = 0;
 var nextServiceHost = "";
 
 var serviceName = process.env.NEXT_LAYER_NAME;
-console.log("Service name : " & serviceName);
-console.log("Service name : " & typeof serviceName);
+console.log(serviceName);
+console.log(typeof serviceName);
 
 
 if (typeof serviceName == 'undefined') {
