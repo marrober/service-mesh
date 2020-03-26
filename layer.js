@@ -35,29 +35,33 @@ var counter = 0;
 var nextServiceHost = "";
 var nextServiceHostEnvName = "";
 
-var serviceName = process.env.NEXT_LAYER_NAME;
-console.log(serviceName);
+var serviceNames = process.env.NEXT_LAYER_NAME;
 
-if (typeof serviceName == 'undefined') {
-  nextServiceHost = "NONE";
-} else {
-  var nextServiceHostEnvName = serviceName.toUpperCase().concat("_SERVICE_HOST");
-  nextServiceHostEnvName = nextServiceHostEnvName.replace('-', '_');
+var serviceNamesList = serviceNames.split(",");
+var nextServiceList = "";
 
-  console.log(nextServiceHostEnvName);
-  nextServiceHost = process.env[nextServiceHostEnvName];
-  console.log(nextServiceHost);
-}
+serviceNamesList.foreach( service => {
+  var serviceName = process.env.NEXT_LAYER_NAME;
+  console.log(serviceName);
+
+  if (typeof serviceName == 'undefined') {
+    nextServiceHost = "NONE";
+  } else {
+    var nextServiceHostEnvName = serviceName.toUpperCase().concat("_SERVICE_HOST");
+    nextServiceHostEnvName = nextServiceHostEnvName.replace('-', '_');
+
+    console.log(nextServiceHostEnvName);
+    nextServiceHost.push(process.env[nextServiceHostEnvName]);
+    console.log(nextServiceHost);
+    console.log("next interface service host : " + nextServiceHost);
+    log.info({phase: 'setup', id: id}, "next interface service host : " + nextServiceHost);
+  }
+});
+
+console.log(nextServiceHost.length());
 var nextServicePort = targePort;
 
-if (typeof nextServiceHost == 'undefined') {
-  nextServiceHost = "NONE";
-}
-
-console.log("next interface service host : " + nextServiceHost);
 console.log("next interface service port : " + nextServicePort);
-
-log.info({phase: 'setup', id: id}, "next interface service host : " + nextServiceHost);
 log.info({phase: 'setup', id: id}, "next interface service port : " + nextServicePort);
 
 var options = {
@@ -90,8 +94,9 @@ app.get('/call-layers', (request, response) => {
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
-  if (nextServiceHost != "NONE") {
-    log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceHost);
+  if (nextServiceHost.length() > 0) {
+    var nextServiceHostToUse = nextServiceHost(getRandomIndex(nextServiceHost.length()));
+    log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceHostToUse);
     sendNextRequest("live", function (valid, text) {
       if (valid == true) {
         text = text.replace(/"/g,"");
@@ -149,5 +154,9 @@ function sendNextRequest(slave_control, cb) {
 
   request.setTimeout( 1000, function( ) {
     log.error("Error : timeout");
-});
+  });
+}
+
+function getRandomIndex(max) {
+  return Math.floor(Math.random() * Math.floor(max));
 }
