@@ -44,6 +44,8 @@ if (typeof serviceName == 'undefined') {
   nextServiceHost = "NONE";
 } else {
   var nextServiceHostEnvName = serviceName.toUpperCase().concat("_SERVICE_HOST");
+  nextServiceHostEnvName.replace('-', '_');
+
   console.log(nextServiceHostEnvName);
   nextServiceHost = process.env[nextServiceHostEnvName];
   console.log(nextServiceHost);
