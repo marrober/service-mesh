@@ -15,8 +15,15 @@ var log = bunyan.createLogger({
     }]
   });
 
+/* API endpoints ....
+    /             - Get the IP address of the current layer.
+    /call-layers  - Call the next layer microservice indicated by the environment variable NEXT_LAYER_NAME
+    /sendIgnore   - Tell the receiving next layer container to ignore further requests (used for liveness and readiness testing)
+    /ignore       - Receive a request to ignore further communication.
+*/
+
+
 var targePort = 8080;
-var layerName = process.env.LAYER_NAME;
 
 const port = targePort;
 log.info({app: 'this', phase: 'setup', id: id}, "This app target port : " + port);
@@ -25,12 +32,23 @@ log.info({app: 'this', phase: 'setup', id: id}, "This app ip address  : " + ip.a
 console.log("Application is starting......");
 var counter = 0;
 
-var nextServiceHost = process.env.NEXT_LAYER_NAME;
+var nextServiceHost = "";
+
+var serviceName = process.env.NEXT_LAYER_NAME;
+if (typeof serviceName == 'undefined') {
+  nextServiceHost = "NONE";
+} else {
+  var nextServiceHostEnvName = serviceName.toUpperCase() & "_SERVICE_HOST";
+  nextServiceHost = process.env[nextServiceHostEnvName];
+}
 var nextServicePort = targePort;
 
 if (typeof nextServiceHost == 'undefined') {
   nextServiceHost = "NONE";
 }
+
+console.log("next interface service host : " + nextServiceHost);
+console.log("next interface service port : " + nextServicePort);
 
 log.info({phase: 'setup', id: id}, "next interface service host : " + nextServiceHost);
 log.info({phase: 'setup', id: id}, "next interface service port : " + nextServicePort);
