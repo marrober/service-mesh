@@ -86,7 +86,7 @@ app.get('/', (request, response) => {
 
 app.get('/call-layers', (request, response) => {
   counter++;
-  messageText = sprintfJS.sprintf(" from %-15s", ip.address());
+  messageText = sprintfJS.sprintf("From %s", ip.address());
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
@@ -95,14 +95,14 @@ app.get('/call-layers', (request, response) => {
     sendNextRequest("live", function (valid, text) {
       if (valid == true) {
         text = text.replace(/"/g,"");
-        messageText += sprintfJS.sprintf(" ----> next layer %-15s", text);
+        messageText += sprintfJS.sprintf(" ----> next layer %s", text);
         console.log(messageText);
         log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
         response.json(messageText);
       }
     });
   } else {
-    messageText = sprintfJS.sprintf(" ----> no more layers. ", ip.address());
+    messageText = sprintfJS.sprintf(" %s", ip.address());
     log.info({app: 'this', phase: 'operational', id: id}, messageText);
     response.send(messageText + "\n");
   }
