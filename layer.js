@@ -38,12 +38,15 @@ var serviceName = process.env.NEXT_LAYER_NAME;
 console.log(serviceName);
 console.log(typeof serviceName);
 
+var nextServiceHostEnvName = "";
 
 if (typeof serviceName == 'undefined') {
   nextServiceHost = "NONE";
 } else {
   var nextServiceHostEnvName = serviceName.toUpperCase() & "_SERVICE_HOST";
+  console.log(nextServiceHostEnvName);
   nextServiceHost = process.env[nextServiceHostEnvName];
+  console.log(nextServiceHost);
 }
 var nextServicePort = targePort;
 
