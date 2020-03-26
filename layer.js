@@ -86,23 +86,23 @@ app.get('/', (request, response) => {
 
 app.get('/call-layers', (request, response) => {
   counter++;
-  messageText = sprintfJS.sprintf("this ip address %-15s .... about to send next layer slave request", ip.address());
+  messageText = sprintfJS.sprintf(" from %-15s", ip.address());
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
   if (nextServiceHost != "NONE") {
     log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceHost);
-    sendSlaveRequest("live", function (valid, text) {
+    sendNextRequest("live", function (valid, text) {
       if (valid == true) {
         text = text.replace(/"/g,"");
-        messageText += sprintfJS.sprintf(" ----> next layer ip address %-15s", text);
+        messageText += sprintfJS.sprintf(" ----> next layer %-15s", text);
         console.log(messageText);
         log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
         response.json(messageText);
       }
     });
   } else {
-    messageText = sprintfJS.sprintf("this ip address %-15s .... next layer message not sent - no more layers. ", ip.address());
+    messageText = sprintfJS.sprintf(" ----> no more layers. ", ip.address());
     log.info({app: 'this', phase: 'operational', id: id}, messageText);
     response.send(messageText + "\n");
   }
@@ -113,7 +113,7 @@ app.get('/sendIgnore', (request, response) => {
   messageText = sprintfJS.sprintf("this ip address %-15s", ip.address());
   var counterMessage = sprintfJS.sprintf("%04d", counter);
 
-  sendSlaveRequest("ignore", function (valid, text) {
+  sendNextRequest("ignore", function (valid, text) {
     if (valid == true) {
       text = text.replace(/"/g,"");
       messageText += sprintfJS.sprintf(" ----> slave response %-15s", text);
@@ -126,7 +126,7 @@ app.get('/sendIgnore', (request, response) => {
 
 app.listen(port, () => log.info({app: 'this', phase: 'setup', id: id}, "Listening on port " + port));
 
-function sendSlaveRequest(slave_control, cb) {
+function sendNextRequest(slave_control, cb) {
   if (slave_control == "live") {
     var slaveURL = "http://" + options.host + ":" + options.port + options.path;
   } else{
