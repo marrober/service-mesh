@@ -40,36 +40,34 @@ var serviceNames = process.env.NEXT_LAYER_NAME;
 var thisLayerName = process.env.THIS_LAYER_NAME;
 
 log.info({app: 'this', phase: 'setup', id: id}, "This app name  : " +thisLayerName);
-console.log("This app name  : " +thisLayerName);
+console.log("This app name  : " + thisLayerName);
 
 if (typeof serviceNames != 'undefined') {
   if (serviceNames.length > 0) {
     var serviceNamesList = serviceNames.split(",");
+    console.log(serviceNamesList.length)
     var nextServiceList = "";
 
     serviceNamesList.forEach( service => {
-      var serviceName = process.env.NEXT_LAYER_NAME;
-      console.log(serviceName);
+      console.log(service);
 
-      if (typeof serviceName == 'undefined') {
-        nextServiceHost = "NONE";
-      } else {
-        var nextServiceHostEnvName = serviceName.toUpperCase().concat("_SERVICE_HOST");
-        nextServiceHostEnvName = nextServiceHostEnvName.replace('-', '_');
+      var nextServiceHostEnvName = service.toUpperCase().concat("_SERVICE_HOST");
+      nextServiceHostEnvName = nextServiceHostEnvName.replace('-', '_');
 
-        console.log(nextServiceHostEnvName);
-        nextServiceHost.push(process.env[nextServiceHostEnvName]);
-        console.log(nextServiceHost);
-        console.log("next interface service host : " + nextServiceHost);
-        log.info({phase: 'setup', id: id}, "next interface service host : " + nextServiceHost);
-      }
+      console.log(nextServiceHostEnvName);
+      nextServiceHost.push(process.env[nextServiceHostEnvName]);
+      console.log(nextServiceHost);
+      console.log("next interface service host : " + nextServiceHost);
+      log.info({phase: 'setup', id: id}, "next interface service host : " + nextServiceHost);
     });
-  }
+  } 
+
   console.log("next interface service port : " + nextServicePort);
   log.info({phase: 'setup', id: id}, "next interface service port : " + nextServicePort);
 } else {
   console.log("Last node in the line");
   log.info({phase: 'setup', id: id}, "Last node in the line");
+  nextServiceHost.push("NONE");
 }
 
 console.log(nextServiceHost.length);
