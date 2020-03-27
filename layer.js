@@ -37,27 +37,29 @@ var nextServiceHostEnvName = "";
 
 var serviceNames = process.env.NEXT_LAYER_NAME;
 
-if (serviceNames.length > 0) {
-  var serviceNamesList = serviceNames.split(",");
-  var nextServiceList = "";
+if (typeof serviceNames != 'undefined') {
+  if (serviceNames.length > 0) {
+    var serviceNamesList = serviceNames.split(",");
+    var nextServiceList = "";
 
-  serviceNamesList.forEach( service => {
-    var serviceName = process.env.NEXT_LAYER_NAME;
-    console.log(serviceName);
+    serviceNamesList.forEach( service => {
+      var serviceName = process.env.NEXT_LAYER_NAME;
+      console.log(serviceName);
 
-    if (typeof serviceName == 'undefined') {
-      nextServiceHost = "NONE";
-    } else {
-      var nextServiceHostEnvName = serviceName.toUpperCase().concat("_SERVICE_HOST");
-      nextServiceHostEnvName = nextServiceHostEnvName.replace('-', '_');
+      if (typeof serviceName == 'undefined') {
+        nextServiceHost = "NONE";
+      } else {
+        var nextServiceHostEnvName = serviceName.toUpperCase().concat("_SERVICE_HOST");
+        nextServiceHostEnvName = nextServiceHostEnvName.replace('-', '_');
 
-      console.log(nextServiceHostEnvName);
-      nextServiceHost.push(process.env[nextServiceHostEnvName]);
-      console.log(nextServiceHost);
-      console.log("next interface service host : " + nextServiceHost);
-      log.info({phase: 'setup', id: id}, "next interface service host : " + nextServiceHost);
-    }
-  });
+        console.log(nextServiceHostEnvName);
+        nextServiceHost.push(process.env[nextServiceHostEnvName]);
+        console.log(nextServiceHost);
+        console.log("next interface service host : " + nextServiceHost);
+        log.info({phase: 'setup', id: id}, "next interface service host : " + nextServiceHost);
+      }
+    });
+  }
 }
 
 console.log(nextServiceHost.length);
