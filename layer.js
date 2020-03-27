@@ -103,7 +103,7 @@ app.get('/call-layers', (request, response) => {
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
   if (nextServiceHost.length > 0) {
-    var nextServiceHostToUse = getRandomIndex(nextServiceHost.length);
+    var nextServiceHostToUse = nextServiceHost[getRandomIndex(nextServiceHost.length)];
     log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceHostToUse);
     sendNextRequest("live", function (valid, text) {
       if (valid == true) {
