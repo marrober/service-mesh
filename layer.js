@@ -58,7 +58,7 @@ serviceNamesList.forEach( service => {
   }
 });
 
-console.log(nextServiceHost.length());
+console.log(nextServiceHost.length;
 var nextServicePort = targePort;
 
 console.log("next interface service port : " + nextServicePort);
@@ -94,7 +94,7 @@ app.get('/call-layers', (request, response) => {
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
-  if (nextServiceHost.length() > 0) {
+  if (nextServiceHost.length > 0) {
     var nextServiceHostToUse = nextServiceHost(getRandomIndex(nextServiceHost.length()));
     log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceHostToUse);
     sendNextRequest("live", function (valid, text) {
