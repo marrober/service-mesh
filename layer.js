@@ -40,7 +40,7 @@ var serviceNames = process.env.NEXT_LAYER_NAME;
 var serviceNamesList = serviceNames.split(",");
 var nextServiceList = "";
 
-serviceNamesList.foreach( service => {
+serviceNamesList.forEach( service => {
   var serviceName = process.env.NEXT_LAYER_NAME;
   console.log(serviceName);
 
