@@ -60,13 +60,15 @@ if (typeof serviceNames != 'undefined') {
       }
     });
   }
+  console.log("next interface service port : " + nextServicePort);
+  log.info({phase: 'setup', id: id}, "next interface service port : " + nextServicePort);
+} else {
+  console.log("Last node in the line");
+  log.info({phase: 'setup', id: id}, "Last node in the line");
 }
 
 console.log(nextServiceHost.length);
 var nextServicePort = targePort;
-
-console.log("next interface service port : " + nextServicePort);
-log.info({phase: 'setup', id: id}, "next interface service port : " + nextServicePort);
 
 var options = {
   host: nextServiceHost,
@@ -99,7 +101,7 @@ app.get('/call-layers', (request, response) => {
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
   if (nextServiceHost.length > 0) {
-    var nextServiceHostToUse = nextServiceHost(getRandomIndex(nextServiceHost.length()));
+    var nextServiceHostToUse = nextServiceHost(getRandomIndex(nextServiceHost.length));
     log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceHostToUse);
     sendNextRequest("live", function (valid, text) {
       if (valid == true) {
