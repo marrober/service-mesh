@@ -100,7 +100,7 @@ app.get('/', (request, response) => {
 
 app.get('/call-layers', (request, response) => {
   counter++;
-  messageText = ip.address();
+  messageText = thisLayerName + " [" + ip.address() + "]";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
@@ -117,7 +117,7 @@ app.get('/call-layers', (request, response) => {
       }
     });
   } else {
-    messageText = thisLayerName + "[" + ip.address() + "]";
+    messageText = thisLayerName + " [" + ip.address() + "]";
     log.info({app: 'this', phase: 'operational', id: id}, messageText);
     response.send(messageText);
   }
