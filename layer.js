@@ -24,6 +24,7 @@ var log = bunyan.createLogger({
 
 
 var targePort = 8080;
+var nextServicePort = targePort;
 
 const port = targePort;
 log.info({app: 'this', phase: 'setup', id: id}, "This app target port : " + port);
@@ -36,6 +37,10 @@ var nextServiceHost = [];
 var nextServiceHostEnvName = "";
 
 var serviceNames = process.env.NEXT_LAYER_NAME;
+var thisLayerName = process.env.THIS_LAYER_NAME;
+
+log.info({app: 'this', phase: 'setup', id: id}, "This app name  : " +thisLayerName);
+console.log("This app name  : " +thisLayerName);
 
 if (typeof serviceNames != 'undefined') {
   if (serviceNames.length > 0) {
@@ -68,7 +73,6 @@ if (typeof serviceNames != 'undefined') {
 }
 
 console.log(nextServiceHost.length);
-var nextServicePort = targePort;
 
 var options = {
   host: nextServiceHost,
@@ -106,7 +110,7 @@ app.get('/call-layers', (request, response) => {
     sendNextRequest("live", function (valid, text) {
       if (valid == true) {
         text = text.replace(/"/g,"");
-        messageText += " ----> next layer ".concat(text);
+        messageText += " ---->  " + thisLayerName + " " + text;
         console.log(messageText);
         log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
         response.json(messageText);
