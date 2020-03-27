@@ -58,7 +58,7 @@ serviceNamesList.forEach( service => {
   }
 });
 
-console.log(nextServiceHost.length;
+console.log(nextServiceHost.length);
 var nextServicePort = targePort;
 
 console.log("next interface service port : " + nextServicePort);
