@@ -32,7 +32,7 @@ log.info({app: 'this', phase: 'setup', id: id}, "This app ip address  : " + ip.a
 console.log("Application is starting......");
 var counter = 0;
 
-var nextServiceHost = "";
+var nextServiceHost = [];
 var nextServiceHostEnvName = "";
 
 var serviceNames = process.env.NEXT_LAYER_NAME;
