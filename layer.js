@@ -67,7 +67,6 @@ if (typeof serviceNames != 'undefined') {
 } else {
   console.log("Last node in the line");
   log.info({phase: 'setup', id: id}, "Last node in the line");
-  nextServiceHost.push("NONE");
 }
 
 console.log(nextServiceHost.length);
