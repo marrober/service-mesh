@@ -50,6 +50,7 @@ if (typeof serviceNames != 'undefined') {
 
     serviceNamesList.forEach( service => {
       console.log("Processing service : " + service);
+      service = service.trim();
 
       var nextServiceClusterIPEnvName = service.toUpperCase().concat("_SERVICE_HOST");
       nextServiceClusterIPEnvName = nextServiceClusterIPEnvName.replace('-', '_');
