@@ -38,6 +38,7 @@ var nextServiceClusterIPEnvName = "";
 
 var serviceNames = process.env.NEXT_LAYER_NAME;
 var thisLayerName = process.env.THIS_LAYER_NAME;
+var versionID = process.env.VERSION_ID;
 
 log.info({app: 'this', phase: 'setup', id: id}, "This app name  : " +thisLayerName);
 console.log("This app name  : " + thisLayerName);
@@ -144,7 +145,7 @@ function sendNextRequest(slave_control, cb) {
     var slaveURL = "http://" + optionsIgnore.host + ":" + optionsIgnore.port + optionsIgnore.path;
   }
 
-  request = http.get(slaveURL, (res) => {
+  var request = http.get(slaveURL, (res) => {
     let dataResponse = '';
     res.on('data', (chunk) => {
       dataResponse += chunk;
@@ -154,13 +155,19 @@ function sendNextRequest(slave_control, cb) {
       cb(true, dataResponse);
     });
 
-  }).on("error", (err) => {
+  });
+  
+  request.on("error", (err) => {
     log.error("Error : " + err.message);
   });
 
   request.setTimeout( 1000, function( ) {
     log.error("Error : timeout");
   });
+
+  request.end();
+
+  return request;
 }
 
 function getRandomIndex(max) {
