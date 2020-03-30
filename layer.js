@@ -104,6 +104,9 @@ app.get('/call-layers', (request, response) => {
       log.info({app: 'this', phase: 'operational', id: id}, messageText);
       response.send(messageText);
     }
+  } else {
+    log.info({app: 'this', phase: 'operational', id: id}, messageText);
+    response.send(messageText);
   }
 });
 
