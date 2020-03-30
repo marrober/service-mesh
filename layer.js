@@ -36,31 +36,17 @@ var counter = 0;
 var nextServiceClusterIP = [];
 var nextServiceClusterIPEnvName = "";
 
-var serviceNames = process.env.NEXT_LAYER_NAME;
+var routeNames = process.env.NEXT_ROUTES;
 var thisLayerName = process.env.THIS_LAYER_NAME;
 var versionID = process.env.VERSION_ID;
 
-log.info({app: 'this', phase: 'setup', id: id}, "This app name  : " +thisLayerName);
+log.info({app: 'this', phase: 'setup', id: id}, "This app name  : " + thisLayerName);
 console.log("This app name  : " + thisLayerName);
 
-if (typeof serviceNames != 'undefined') {
-  if (serviceNames.length > 0) {
-    var serviceNamesList = serviceNames.split(",");
-    console.log("Number of downstream services " + serviceNamesList.length)
-    var nextServiceList = "";
-
-    serviceNamesList.forEach( service => {
-      console.log("Processing service : " + service);
-      service = service.trim();
-
-      var nextServiceClusterIPEnvName = service.toUpperCase().concat("_SERVICE_HOST");
-      nextServiceClusterIPEnvName = nextServiceClusterIPEnvName.replace('-', '_');
-
-      console.log(" ... service name " + nextServiceClusterIPEnvName);
-      nextServiceClusterIP.push(process.env[nextServiceClusterIPEnvName]);
-      console.log("next service ip address : " + nextServiceClusterIP);
-      log.info({phase: 'setup', id: id}, "next interface service host : " + nextServiceClusterIP);
-    });
+if (typeof routeNames != 'undefined') {
+  if (routeNames.length > 0) {
+    var routeNamesList = routeNames.split(",");
+    console.log("Number of downstream routes " + routeNamesList.length)
   } 
 
   console.log("next interface service port : " + nextServicePort);
@@ -71,7 +57,7 @@ if (typeof serviceNames != 'undefined') {
 }
 
 var options = {
-  host: nextServiceClusterIP,
+  host: "",
   port: nextServicePort,
   path: '/call-layers',
   method: 'GET'
@@ -100,10 +86,10 @@ app.get('/call-layers', (request, response) => {
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
-  if (nextServiceClusterIP.length > 0) {
-    var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
-    options.host = nextServiceClusterIPToUse;
-    log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceClusterIPToUse);
+  if (routeNames.length > 0) {
+    var nextServiceRoute = routeNames[getRandomIndex(routeNames.length)];
+    options.host = nextServiceRoute;
+    log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceRoute);
     sendNextRequest("live", function (valid, text) {
       if (valid == true) {
         text = text.replace(/"/g,"");
