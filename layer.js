@@ -114,7 +114,7 @@ app.get('/call-layers', (request, response) => {
       }
     });
   } else {
-    messageText = thisLayerName + " [" + ip.address() + "]";
+    messageText = thisLayerName + "(" + versionID + ")" +  "[" + ip.address() + "]";
     log.info({app: 'this', phase: 'operational', id: id}, messageText);
     response.send(messageText);
   }
