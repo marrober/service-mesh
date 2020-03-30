@@ -86,22 +86,24 @@ app.get('/call-layers', (request, response) => {
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
-  if (routeNames.length > 0) {
-    var nextServiceRoute = routeNames[getRandomIndex(routeNames.length)];
-    options.host = nextServiceRoute;
-    log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceRoute);
-    sendNextRequest("live", function (valid, text) {
-      if (valid == true) {
-        text = text.replace(/"/g,"");
-        messageText += " ----> " + text;
-        console.log(messageText);
-        log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
-        response.json(messageText);
-      }
-    });
-  } else {
-    log.info({app: 'this', phase: 'operational', id: id}, messageText);
-    response.send(messageText);
+  if (typeof routeNames != 'undefined') {
+    if (routeNames.length > 0) {
+      var nextServiceRoute = routeNames[getRandomIndex(routeNames.length)];
+      options.host = nextServiceRoute;
+      log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceRoute);
+      sendNextRequest("live", function (valid, text) {
+        if (valid == true) {
+          text = text.replace(/"/g,"");
+          messageText += " ----> " + text;
+          console.log(messageText);
+          log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
+          response.json(messageText);
+        }
+      });
+    } else {
+      log.info({app: 'this', phase: 'operational', id: id}, messageText);
+      response.send(messageText);
+    }
   }
 });
 
