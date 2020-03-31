@@ -87,7 +87,7 @@ app.get('/call-layers', (request, response) => {
   if (typeof routeNames != 'undefined') {
     if (routeNames.length > 0) {
       options.host = routeNamesList[getRandomIndex(routeNamesList.length)];;
-      log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceRoute);
+      log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + options.host);
       sendNextRequest("live", function (valid, text) {
         if (valid == true) {
           text = text.replace(/"/g,"");
