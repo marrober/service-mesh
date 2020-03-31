@@ -33,12 +33,10 @@ log.info({app: 'this', phase: 'setup', id: id}, "This app ip address  : " + ip.a
 console.log("Application is starting......");
 var counter = 0;
 
-var nextServiceClusterIP = [];
-var nextServiceClusterIPEnvName = "";
-
 var routeNames = process.env.NEXT_ROUTES;
 var thisLayerName = process.env.THIS_LAYER_NAME;
 var versionID = process.env.VERSION_ID;
+var routeNamesList = [];
 
 log.info({app: 'this', phase: 'setup', id: id}, "This app name  : " + thisLayerName);
 console.log("This app name  : " + thisLayerName);
@@ -88,8 +86,7 @@ app.get('/call-layers', (request, response) => {
 
   if (typeof routeNames != 'undefined') {
     if (routeNames.length > 0) {
-      var nextServiceRoute = routeNames[getRandomIndex(routeNames.length)];
-      options.host = nextServiceRoute;
+      options.host = routeNamesList[getRandomIndex(routeNamesList.length)];;
       log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceRoute);
       sendNextRequest("live", function (valid, text) {
         if (valid == true) {
@@ -134,6 +131,7 @@ function sendNextRequest(slave_control, cb) {
   } else{
     var slaveURL = "http://" + optionsIgnore.host + optionsIgnore.path;
   }
+  console.log(slaveURL);
 
   var request = http.get(slaveURL, (res) => {
     let dataResponse = '';
