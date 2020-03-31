@@ -130,9 +130,9 @@ app.listen(port, () => log.info({app: 'this', phase: 'setup', id: id}, "Listenin
 
 function sendNextRequest(slave_control, cb) {
   if (slave_control == "live") {
-    var slaveURL = "http://" + options.host + ":" + options.port + options.path;
+    var slaveURL = "http://" + options.host + options.path;
   } else{
-    var slaveURL = "http://" + optionsIgnore.host + ":" + optionsIgnore.port + optionsIgnore.path;
+    var slaveURL = "http://" + optionsIgnore.host + optionsIgnore.path;
   }
 
   var request = http.get(slaveURL, (res) => {
