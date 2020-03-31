@@ -62,7 +62,7 @@ var options = {
 };
 
 var optionsIgnore = {
-  host: nextServiceClusterIP,
+  host: "",
   port: nextServicePort,
   path: '/ignore',
   method: 'GET'
