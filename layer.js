@@ -121,7 +121,7 @@ app.get('/call-layers', (request, response) => {
 
 app.get('/get-info', (request, response) => {
   counter++;
-  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + " Build source : " + process.env.OPENSHIFT_BUILD_SOURCE;
+  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + " Build source : " + process.env.OPENSHIFT_BUILD_SOURCE + " GIT commit : " + process.env.OPENSHIFT_BUILD_COMMIT;
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
   response.send(messageText);
