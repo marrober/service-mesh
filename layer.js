@@ -38,6 +38,7 @@ var nextServiceClusterIPEnvName = "";
 
 var serviceNames = process.env.NEXT_LAYER_NAME;
 var thisLayerName = process.env.THIS_LAYER_NAME;
+var studentName = process.env.STUDENT_NAME;
 var versionID = process.env.VERSION_ID;
 
 log.info({app: 'this', phase: 'setup', id: id}, "This app name  : " +thisLayerName);
@@ -73,16 +74,16 @@ if (typeof serviceNames != 'undefined') {
 var options = {
   host: nextServiceClusterIP,
   port: nextServicePort,
-  path: '/call-layers',
+  path: "",
   method: 'GET'
 };
 
-var optionsIgnore = {
-  host: nextServiceClusterIP,
-  port: nextServicePort,
-  path: '/ignore',
-  method: 'GET'
-};
+var layers_url = "/" + studentName.toLowerCase() + "/call-layers";
+var info_url = "/" + studentName.toLowerCase() + "get-info";
+
+console.log("URL's configured for use ..........");
+console.log("Layers   : " + layers_url);
+console.log("Info url : " + info_url);
 
 var ip = require("ip");
 var messageText = "";
@@ -94,7 +95,7 @@ app.get('/', (request, response) => {
   response.send(messageText + "\n");
 });
 
-app.get('/call-layers', (request, response) => {
+app.get(layers_url, (request, response) => {
   counter++;
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
@@ -103,8 +104,9 @@ app.get('/call-layers', (request, response) => {
   if (nextServiceClusterIP.length > 0) {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
     options.host = nextServiceClusterIPToUse;
+    options.path = layers_url;
     log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceClusterIPToUse);
-    sendNextRequest("live", function (valid, text) {
+    sendNextRequest(function (valid, text) {
       if (valid == true) {
         text = text.replace(/"/g,"");
         messageText += " ----> " + text;
@@ -119,7 +121,7 @@ app.get('/call-layers', (request, response) => {
   }
 });
 
-app.get('/get-info', (request, response) => {
+app.get(info_url, (request, response) => {
   counter++;
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + " Build source : " + process.env.OPENSHIFT_BUILD_SOURCE + " GIT commit : " + process.env.OPENSHIFT_BUILD_COMMIT;
   var counterMessage = sprintfJS.sprintf("%04d", counter);
@@ -127,30 +129,10 @@ app.get('/get-info', (request, response) => {
   response.send(messageText);
 });
 
-app.get('/sendIgnore', (request, response) => {
-  counter++;
-  messageText = sprintfJS.sprintf("this ip address %-15s", ip.address());
-  var counterMessage = sprintfJS.sprintf("%04d", counter);
-
-  sendNextRequest("ignore", function (valid, text) {
-    if (valid == true) {
-      text = text.replace(/"/g,"");
-      messageText += sprintfJS.sprintf(" ----> slave response %-15s", text);
-      console.log(messageText);
-      log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
-      response.json(messageText);
-    }
-  });
-});
-
 app.listen(port, () => log.info({app: 'this', phase: 'setup', id: id}, "Listening on port " + port));
 
-function sendNextRequest(slave_control, cb) {
-  if (slave_control == "live") {
-    var slaveURL = "http://" + options.host + ":" + options.port + options.path;
-  } else{
-    var slaveURL = "http://" + optionsIgnore.host + ":" + optionsIgnore.port + optionsIgnore.path;
-  }
+function sendNextRequest(cb) {
+  var slaveURL = "http://" + options.host + ":" + options.port + options.path;
 
   var request = http.get(slaveURL, (res) => {
     let dataResponse = '';
