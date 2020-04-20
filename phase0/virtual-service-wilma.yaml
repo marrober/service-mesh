@@ -19,4 +19,4 @@ spec:
     - destination:
         host: wilma # interpreted as wilma.foo.svc.cluster.local
         port:
-          number: 8080
+          number: 8081

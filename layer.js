@@ -23,7 +23,7 @@ var log = bunyan.createLogger({
 */
 
 
-var targePort = 8080;
+var targePort = process.env.PORT;
 var nextServicePort = targePort;
 
 const port = targePort;
