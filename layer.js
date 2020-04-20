@@ -22,7 +22,10 @@ var log = bunyan.createLogger({
     /ignore       - Receive a request to ignore further communication.
 */
 
-
+var serviceNames = process.env.NEXT_LAYER_NAME;
+var thisLayerName = process.env.THIS_LAYER_NAME;
+var studentName = process.env.STUDENT_NAME;
+var versionID = process.env.VERSION_ID;
 var targePort = process.env.PORT;
 var nextServicePort = targePort;
 
@@ -35,11 +38,6 @@ var counter = 0;
 
 var nextServiceClusterIP = [];
 var nextServiceClusterIPEnvName = "";
-
-var serviceNames = process.env.NEXT_LAYER_NAME;
-var thisLayerName = process.env.THIS_LAYER_NAME;
-var studentName = process.env.STUDENT_NAME;
-var versionID = process.env.VERSION_ID;
 
 log.info({app: 'this', phase: 'setup', id: id}, "This app name  : " +thisLayerName);
 console.log("This app name  : " + thisLayerName);
@@ -79,7 +77,7 @@ var options = {
 };
 
 var layers_url = "/" + studentName.toLowerCase() + "/call-layers";
-var info_url = "/" + studentName.toLowerCase() + "get-info";
+var info_url = "/" + studentName.toLowerCase() + "/get-info";
 
 console.log("URL's configured for use ..........");
 console.log("Layers   : " + layers_url);
@@ -129,6 +127,7 @@ app.get(info_url, (request, response) => {
   response.send(messageText);
 });
 
+console.log("Listening on port " + port);
 app.listen(port, () => log.info({app: 'this', phase: 'setup', id: id}, "Listening on port " + port));
 
 function sendNextRequest(cb) {
