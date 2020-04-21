@@ -76,10 +76,6 @@ var options = {
   method: 'GET'
 };
 
-console.log("URL's configured for use ..........");
-console.log("Layers   : " + layers_url);
-console.log("Info url : " + info_url);
-
 var ip = require("ip");
 var messageText = "";
 
@@ -99,7 +95,7 @@ app.get('/call-layers', (request, response) => {
   if (nextServiceClusterIP.length > 0) {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
     options.host = nextServiceClusterIPToUse;
-    options.path = layers_url;
+    options.path = "/call-layers";
     log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceClusterIPToUse);
     sendNextRequest(function (valid, text) {
       if (valid == true) {
