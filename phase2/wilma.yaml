@@ -37,16 +37,3 @@ spec:
             value: v1
           - name: NEXT_LAYER_NAME
             value: fred
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: wilma
-  labels:
-    app: wilma    
-spec:
-  ports:
-  - name: http
-    port: 8080
-  selector:
-    app: wilma

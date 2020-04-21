@@ -24,9 +24,9 @@ var log = bunyan.createLogger({
 
 var serviceNames = process.env.NEXT_LAYER_NAME;
 var thisLayerName = process.env.THIS_LAYER_NAME;
-var studentName = process.env.STUDENT_NAME;
 var versionID = process.env.VERSION_ID;
-var targePort = process.env.PORT;
+
+var targePort = 8080;
 var nextServicePort = targePort;
 
 const port = targePort;
@@ -39,7 +39,7 @@ var counter = 0;
 var nextServiceClusterIP = [];
 var nextServiceClusterIPEnvName = "";
 
-log.info({app: 'this', phase: 'setup', id: id}, "This app name  : " +thisLayerName);
+log.info({app: 'this', phase: 'setup', id: id}, "This app name  : " + thisLayerName);
 console.log("This app name  : " + thisLayerName);
 
 if (typeof serviceNames != 'undefined') {
@@ -76,9 +76,6 @@ var options = {
   method: 'GET'
 };
 
-var layers_url = "/" + studentName.toLowerCase() + "/call-layers";
-var info_url = "/" + studentName.toLowerCase() + "/get-info";
-
 console.log("URL's configured for use ..........");
 console.log("Layers   : " + layers_url);
 console.log("Info url : " + info_url);
@@ -93,7 +90,7 @@ app.get('/', (request, response) => {
   response.send(messageText + "\n");
 });
 
-app.get(layers_url, (request, response) => {
+app.get('/call-layers', (request, response) => {
   counter++;
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
@@ -119,7 +116,7 @@ app.get(layers_url, (request, response) => {
   }
 });
 
-app.get(info_url, (request, response) => {
+app.get('/get-info', (request, response) => {
   counter++;
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + " Build source : " + process.env.OPENSHIFT_BUILD_SOURCE + " GIT commit : " + process.env.OPENSHIFT_BUILD_COMMIT;
   var counterMessage = sprintfJS.sprintf("%04d", counter);
