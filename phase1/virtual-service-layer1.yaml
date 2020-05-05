@@ -1,12 +1,12 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: flintstones
+  name: layers
 spec:
   hosts:
-  - wilma-flintstones.apps.cluster-c2d5.c2d5.example.opentlc.com
+  - layer1-layers.apps.cluster-c2d5.c2d5.example.opentlc.com
   gateways:
-  - wilma-gateway
+  - layer1-gateway
   http:
   - match:
     - uri:
@@ -17,6 +17,6 @@ spec:
         exact: /
     route:
     - destination:
-        host: wilma 
+        host: layer1 
         port:
           number: 8080

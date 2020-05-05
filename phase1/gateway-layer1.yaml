@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: wilma-gateway
+  name: layer1-gateway
 spec:
   selector:
     istio: ingressgateway # use istio default controller
@@ -11,4 +11,4 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - wilma-flintstones.apps.cluster-c2d5.c2d5.example.opentlc.com
+    - layer1-layers.apps.cluster-c2d5.c2d5.example.opentlc.com
