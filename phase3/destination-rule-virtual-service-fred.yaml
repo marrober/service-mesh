@@ -1,9 +1,9 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: fred
+  name: layer2
 spec:
-  host: fred
+  host: layer2
   subsets:
   - name: v1
     labels:
@@ -18,21 +18,21 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: fred
+  name: layer2
 spec:
   hosts:
-  - fred
+  - layer2
   http:
   - route:
     - destination:
-        host: fred
+        host: layer2
         subset: v1
       weight: 50
     - destination:
-        host: fred
+        host: layer2
         subset: v2
       weight: 30
     - destination:
-        host: fred
+        host: layer2
         subset: v3
       weight: 20

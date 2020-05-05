@@ -2,21 +2,21 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: wilma
+    app: layer1
     version: v1
-    app.kubernetes.io/part-of: flintstones
+    app.kubernetes.io/part-of: layers
     app.openshift.io/runtime: nodejs
-  name: wilma-v1
+  name: layer1-v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wilma
+      app: layer1
       version: v1
   template:
     metadata:
       labels:
-        app: wilma
+        app: layer1
         version: v1
       annotations:
         sidecar.istio.io/inject: "true"
@@ -25,15 +25,15 @@ spec:
       - env:
         image: quay.io/marrober/layers:latest
         imagePullPolicy: Always
-        name: wilma
+        name: layer1
         ports:
         - containerPort: 8080
           name: http
           protocol: TCP
         env:
           - name: THIS_LAYER_NAME
-            value: wilma
+            value: layer1
           - name: VERSION_ID
             value: v1
           - name: NEXT_LAYER_NAME
-            value: fred
+            value: layer2

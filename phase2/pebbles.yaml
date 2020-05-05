@@ -4,7 +4,7 @@ metadata:
   labels:
     app: pebbles
     version: v1
-    app.kubernetes.io/part-of: flintstones
+    app.kubernetes.io/part-of: layers
     app.openshift.io/runtime: nodejs
   name: pebbles-v1
 spec:
@@ -56,9 +56,9 @@ metadata:
   labels:
     app: pebbles
   name: pebbles
-  namespace: flintstones
+  namespace: layers
 spec:
-  host: pebbles-flintstones.apps.cluster-c2d5.c2d5.example.opentlc.com
+  host: pebbles-layers.apps.cluster-c2d5.c2d5.example.opentlc.com
   port:
     targetPort: http
   to:

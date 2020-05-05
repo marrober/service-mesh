@@ -4,9 +4,9 @@ metadata:
   name: pebbles
 spec:
   hosts:
-  - pebbles-flintstones.apps.cluster-c2d5.c2d5.example.opentlc.com
+  - pebbles-layers.apps.cluster-c2d5.c2d5.example.opentlc.com
   gateways:
-  - flintstones-gateway-pebbles
+  - layers-gateway-pebbles
   http:
   - match:
     - uri:
@@ -17,6 +17,6 @@ spec:
         exact: /
     route:
     - destination:
-        host: pebbles # interpreted as wilma.foo.svc.cluster.local
+        host: pebbles # interpreted as layer1.foo.svc.cluster.local
         port:
           number: 8080
