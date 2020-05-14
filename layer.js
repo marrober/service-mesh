@@ -3,6 +3,7 @@ const express = require('express');
 const sprintfJS = require('sprintf-js');
 var ip = require("ip");
 var bunyan = require('bunyan');
+var sleep = require('sleep');
 const app = express();
 
 const uuid = require('uuid')
@@ -118,6 +119,7 @@ app.get('/call-layers:sleep', (request, response) => {
   counter++;
   var sleep = request.params.sleep;
   console.log("sleep time  : " + sleep);
+  sleep.msleep(1000);
   //if (sleep.contains(":")) {
   //  sleep = sleep.substring(1,sleep.length);
   // }
@@ -125,7 +127,8 @@ app.get('/call-layers:sleep', (request, response) => {
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleep + ")";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
-  // call_layer(response, messageText);
+
+    // call_layer(response, messageText);
   response.send("....");
 
 });
