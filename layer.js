@@ -88,8 +88,6 @@ app.get('/', (request, response) => {
 
 app.get('/call-layers', (request, response) => {
   counter++;
-  var sleep = request.params.sleep;
-  console.log("sleep time  : " + sleep);
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
@@ -117,17 +115,15 @@ app.get('/call-layers', (request, response) => {
 app.get('/call-layers:sleepTime', (request, response) => {
   counter++;
   var sleepTime = request.params.sleepTime;
-  console.log("sleep time  : " + sleepTime);
+  log.info({app: 'this', phase: 'timing', id: id}, "sleeping ... " + sleepTime);
   sleep(10000).then(() => {
-    console.log("and awake");
+    log.info({app: 'this', phase: 'timing', id: id}, "sleeping ... ");
 
-  console.log("sleep time  : " + sleep);
-  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleep + ")";
-  var counterMessage = sprintfJS.sprintf("%04d", counter);
-  log.info({app: 'this', phase: 'operational', id: id}, messageText);
+    console.log("sleep time  : " + sleep);
+    messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleep + ")";
+    log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
-    // call_layer(response, messageText);
-  response.send("....");
+    call_layer(response, messageText);
   });
 });
 
