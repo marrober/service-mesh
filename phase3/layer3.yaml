@@ -100,7 +100,6 @@ spec:
       containers:
       - env:
         image: quay.io/marrober/layers:latest
-        imagePullPolicy: Always
         name: layer3
         ports:
         - containerPort: 8080

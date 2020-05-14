@@ -1,9 +1,9 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: wilma
+  name: layer1
 spec:
-  host: wilma
+  host: layer1
   subsets:
   - name: v1
     labels:
@@ -13,9 +13,9 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: fred
+  name: layer2
 spec:
-  host: fred
+  host: layer2
   subsets:
   - name: v1
     labels:
