@@ -117,6 +117,7 @@ app.get('/call-layers', (request, response) => {
 app.get('/call-layers:sleep', (request, response) => {
   counter++;
   var sleep = request.params.sleep;
+  console.log("sleep time  : " + sleep);
   if (sleep.contains(":")) {
     sleep = sleep.substring(1,sleep.length);
   }
@@ -124,11 +125,11 @@ app.get('/call-layers:sleep', (request, response) => {
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleep + ")";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
-  call_layer();
+  call_layer(response, messageText);
 
 });
 
-function call_layer(messageText){
+function call_layer(response, messageText){
   if (nextServiceClusterIP.length > 0) {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
     options.host = nextServiceClusterIPToUse;
