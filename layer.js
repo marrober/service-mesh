@@ -118,8 +118,8 @@ app.get('/call-layers:sleep', (request, response) => {
   counter++;
   var sleep = request.params.sleep;
   console.log("sleep time  : " + sleep);
-  await sleep(10000);
-  console.log("and awake");
+  sleep(10000).then(() => {
+    console.log("and awake");
 
   //if (sleep.contains(":")) {
   //  sleep = sleep.substring(1,sleep.length);
@@ -131,7 +131,7 @@ app.get('/call-layers:sleep', (request, response) => {
 
     // call_layer(response, messageText);
   response.send("....");
-
+  });
 });
 
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
