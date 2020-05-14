@@ -3,7 +3,6 @@ const express = require('express');
 const sprintfJS = require('sprintf-js');
 var ip = require("ip");
 var bunyan = require('bunyan');
-var sleep = require('sleep');
 const app = express();
 
 const uuid = require('uuid')
@@ -119,7 +118,9 @@ app.get('/call-layers:sleep', (request, response) => {
   counter++;
   var sleep = request.params.sleep;
   console.log("sleep time  : " + sleep);
-  sleep.msleep(1000);
+  await sleep(10000);
+  console.log("and awake");
+
   //if (sleep.contains(":")) {
   //  sleep = sleep.substring(1,sleep.length);
   // }
@@ -132,6 +133,8 @@ app.get('/call-layers:sleep', (request, response) => {
   response.send("....");
 
 });
+
+const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 
 function call_layer(response, messageText){
   if (nextServiceClusterIP.length > 0) {
