@@ -105,7 +105,7 @@ app.get('/call-layers', (request, response) => {
         messageText += " ----> " + text;
         console.log(messageText);
         log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
-        response.json(messageText);
+        response.send(messageText);
       }
     });
   } else {
@@ -125,7 +125,8 @@ app.get('/call-layers:sleep', (request, response) => {
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleep + ")";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
-  call_layer(response, messageText);
+  // call_layer(response, messageText);
+  response.send("....");
 
 });
 
@@ -141,7 +142,7 @@ function call_layer(response, messageText){
         messageText += " ----> " + text;
         console.log(messageText);
         log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
-        response.json(messageText);
+        response.send(messageText);
       }
     });
   } else {
