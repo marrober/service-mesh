@@ -118,9 +118,9 @@ app.get('/call-layers:sleep', (request, response) => {
   counter++;
   var sleep = request.params.sleep;
   console.log("sleep time  : " + sleep);
-  if (sleep.contains(":")) {
-    sleep = sleep.substring(1,sleep.length);
-  }
+  //if (sleep.contains(":")) {
+  //  sleep = sleep.substring(1,sleep.length);
+  // }
   console.log("sleep time  : " + sleep);
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleep + ")";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
