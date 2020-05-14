@@ -1,12 +1,10 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: pebbles
+  name: layer2
 spec:
   hosts:
-  - pebbles-flintstones.apps.cluster-c2d5.c2d5.example.opentlc.com
-  gateways:
-  - flintstones-gateway-pebbles
+  - layer2
   http:
   - match:
     - uri:
@@ -17,6 +15,6 @@ spec:
         exact: /
     route:
     - destination:
-        host: pebbles # interpreted as wilma.foo.svc.cluster.local
+        host: layer2 # interpreted as layer1.foo.svc.cluster.local
         port:
           number: 8080
