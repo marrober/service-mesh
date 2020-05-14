@@ -115,11 +115,11 @@ app.get('/call-layers', (request, response) => {
 app.get('/call-layers:sleepTime', (request, response) => {
   counter++;
   var sleepTime = request.params.sleepTime;
+  sleepTime = sleepTime.substr(1, sleepTime.length);
+  console.log("sleep time  : " + sleepTime);
   log.info({app: 'this', phase: 'timing', id: id}, "sleeping ... " + sleepTime);
-  sleep(10000).then(() => {
+  sleep(sleepTime).then(() => {
     log.info({app: 'this', phase: 'timing', id: id}, "sleeping ... ");
-
-    console.log("sleep time  : " + sleep);
     messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleep + ")";
     log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
