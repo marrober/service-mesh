@@ -86,8 +86,10 @@ app.get('/', (request, response) => {
   response.send(messageText + "\n");
 });
 
-app.get('/call-layers', (request, response) => {
+app.get('/call-layers:sleep', (request, response) => {
   counter++;
+  var sleep = request.params.sleep;
+  console.log("sleep time  : " + sleep);
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({app: 'this', phase: 'operational', id: id}, messageText);
