@@ -114,16 +114,13 @@ app.get('/call-layers', (request, response) => {
   }
 });
 
-app.get('/call-layers:sleep', (request, response) => {
+app.get('/call-layers:sleepTime', (request, response) => {
   counter++;
-  var sleep = request.params.sleep;
-  console.log("sleep time  : " + sleep);
+  var sleepTime = request.params.sleepTime;
+  console.log("sleep time  : " + sleepTime);
   sleep(10000).then(() => {
     console.log("and awake");
 
-  //if (sleep.contains(":")) {
-  //  sleep = sleep.substring(1,sleep.length);
-  // }
   console.log("sleep time  : " + sleep);
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleep + ")";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
