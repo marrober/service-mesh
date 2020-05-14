@@ -86,7 +86,7 @@ app.get('/', (request, response) => {
   response.send(messageText + "\n");
 });
 
-app.get('/call-layers:sleep', (request, response) => {
+app.get('/call-layers', (request, response) => {
   counter++;
   var sleep = request.params.sleep;
   console.log("sleep time  : " + sleep);
@@ -113,6 +113,42 @@ app.get('/call-layers:sleep', (request, response) => {
     response.send(messageText);
   }
 });
+
+app.get('/call-layers:sleep', (request, response) => {
+  counter++;
+  var sleep = request.params.sleep;
+  if (sleep.contains(":")) {
+    sleep = sleep.substring(1,sleep.length);
+  }
+  console.log("sleep time  : " + sleep);
+  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleep + ")";
+  var counterMessage = sprintfJS.sprintf("%04d", counter);
+  log.info({app: 'this', phase: 'operational', id: id}, messageText);
+  call_layer();
+
+});
+
+function call_layer(messageText){
+  if (nextServiceClusterIP.length > 0) {
+    var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
+    options.host = nextServiceClusterIPToUse;
+    options.path = "/call-layers";
+    log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceClusterIPToUse);
+    sendNextRequest(function (valid, text) {
+      if (valid == true) {
+        text = text.replace(/"/g,"");
+        messageText += " ----> " + text;
+        console.log(messageText);
+        log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
+        response.json(messageText);
+      }
+    });
+  } else {
+    log.info({app: 'this', phase: 'operational', id: id}, messageText);
+    response.send(messageText);
+  }
+
+}
 
 app.get('/get-info', (request, response) => {
   counter++;
