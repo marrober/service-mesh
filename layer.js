@@ -24,7 +24,15 @@ var log = bunyan.createLogger({
 
 var serviceNames = process.env.NEXT_LAYER_NAME;
 var thisLayerName = process.env.THIS_LAYER_NAME;
+var ignoreDelays = process.env.IGNORE_DELAYS;
 var versionID = process.env.VERSION_ID;
+var ignoreDelaysFlag = false;
+
+if (typeof ignoreDelays != 'undefined') {
+  if (ignoreDelays.toUpperCase() == "TRUE") {
+    ignoreDelaysFlag = true;
+  }
+}
 
 var targePort = 8080;
 var nextServicePort = targePort;
@@ -116,38 +124,36 @@ app.get('/call-layers:sleepTime', (request, response) => {
   counter++;
   var sleepTime = request.params.sleepTime;
   sleepTime = sleepTime.substr(1, sleepTime.length);
+  if (ignoreDelaysFlag) {
+    sleepTime = 0;
+  }
   log.info({app: 'this', phase: 'timing', id: id}, "sleeping ... " + sleepTime);
   sleep(sleepTime).then(() => {
     messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleepTime + " ms)";
     log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
-    call_layer(response, messageText);
+    if (nextServiceClusterIP.length > 0) {
+      var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
+      options.host = nextServiceClusterIPToUse;
+      options.path = "/call-layers:" + sleepTime;
+      log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceClusterIPToUse);
+      sendNextRequest(function (valid, text) {
+        if (valid == true) {
+          text = text.replace(/"/g,"");
+          messageText += " ----> " + text;
+          console.log(messageText);
+          log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
+          response.send(messageText);
+        }
+      });
+    } else {
+      log.info({app: 'this', phase: 'operational', id: id}, messageText);
+      response.send(messageText);
+    }
   });
 });
 
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
-
-function call_layer(response, messageText){
-  if (nextServiceClusterIP.length > 0) {
-    var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
-    options.host = nextServiceClusterIPToUse;
-    options.path = "/call-layers";
-    log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceClusterIPToUse);
-    sendNextRequest(function (valid, text) {
-      if (valid == true) {
-        text = text.replace(/"/g,"");
-        messageText += " ----> " + text;
-        console.log(messageText);
-        log.info({app: 'this', phase: 'operational', id: id, counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
-        response.send(messageText);
-      }
-    });
-  } else {
-    log.info({app: 'this', phase: 'operational', id: id}, messageText);
-    response.send(messageText);
-  }
-
-}
 
 app.get('/get-info', (request, response) => {
   counter++;

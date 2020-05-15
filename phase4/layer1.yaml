@@ -35,3 +35,5 @@ spec:
             value: layer1
           - name: VERSION_ID
             value: v1
+          - name: NEXT_LAYER_NAME
+            value: layer2
