@@ -130,6 +130,7 @@ app.get('/call-layers:sleepTime', (request, response) => {
   log.info({app: 'this', phase: 'timing', id: id}, "sleeping ... " + sleepTime);
   sleep(sleepTime).then(() => {
     messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleepTime + " ms)";
+    var counterMessage = sprintfJS.sprintf("%04d", counter);
     log.info({app: 'this', phase: 'operational', id: id}, messageText);
 
     if (nextServiceClusterIP.length > 0) {
