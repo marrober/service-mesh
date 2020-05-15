@@ -138,7 +138,7 @@ app.get('/call-layers:sleepTime', (request, response) => {
       options.host = nextServiceClusterIPToUse;
       options.path = "/call-layers:" + sleepTime;
       log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceClusterIPToUse + " with delay of " + sleepTime +" ms");
-      
+
       sendNextRequest(function (valid, text) {
         if (valid == true) {
           text = text.replace(/"/g,"");
@@ -170,14 +170,17 @@ app.listen(port, () => log.info({app: 'this', phase: 'setup', id: id}, "Listenin
 
 function sendNextRequest(cb) {
   var slaveURL = "http://" + options.host + ":" + options.port + options.path;
+  log.info({app: 'this', phase: 'operational', id: id}, "Sending message to next layer : " + slaveURL);
 
   var request = http.get(slaveURL, (res) => {
     let dataResponse = '';
     res.on('data', (chunk) => {
       dataResponse += chunk;
+      log.info({app: 'this', phase: 'operational', id: id}, "Got data back : " + dataResponse);
     });
 
     res.on('end', () => {
+      log.info({app: 'this', phase: 'operational', id: id}, "Got data end : " + dataResponse);
       cb(true, dataResponse);
     });
 
@@ -187,7 +190,7 @@ function sendNextRequest(cb) {
     log.error("Error : " + err.message);
   });
 
-  request.setTimeout( 1000, function( ) {
+  request.setTimeout( 10000, function( ) {
     log.error("Error : timeout");
   });
 
