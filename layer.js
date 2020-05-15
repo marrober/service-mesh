@@ -121,6 +121,7 @@ app.get('/call-layers', (request, response) => {
 });
 
 app.get('/call-layers:sleepTime', (request, response) => {
+  log.info({app: 'this', phase: 'operational', id: id}, "recieved incoming request on sleeper api");
   counter++;
   var sleepTime = request.params.sleepTime;
   sleepTime = sleepTime.substr(1, sleepTime.length);
