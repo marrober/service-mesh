@@ -120,7 +120,7 @@ app.get('/call-layers', (request, response) => {
   }
 });
 
-app.get('/call-layers:sleepTime', (request, response) => {
+app.get('/call-layers-sleep:sleepTime', (request, response) => {
   log.info({app: 'this', phase: 'operational', id: id}, "recieved incoming request on sleeper api");
   counter++;
   var sleepTime = request.params.sleepTime;
@@ -137,7 +137,7 @@ app.get('/call-layers:sleepTime', (request, response) => {
     if (nextServiceClusterIP.length > 0) {
       var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
       options.host = nextServiceClusterIPToUse;
-      options.path = "/call-layers:" + sleepTime;
+      options.path = "/call-layers-sleep:" + sleepTime;
       log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceClusterIPToUse + " with delay of " + sleepTime +" ms");
 
       sendNextRequest(function (valid, text) {

@@ -22,7 +22,7 @@ spec:
   http:
   - match:
     - uri:
-        exact: /call-layers
+        prefix: /call-layers
     - uri:
         exact: /get-info        
     - uri:
@@ -34,10 +34,10 @@ spec:
           number: 8080
         subset: v1
       weight: 50
-      timeout: 1.000s
     - destination:
         host: layer2
         port:
           number: 8080
         subset: v2
       weight: 50
+    timeout: 1.000s
