@@ -137,7 +137,8 @@ app.get('/call-layers:sleepTime', (request, response) => {
       var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
       options.host = nextServiceClusterIPToUse;
       options.path = "/call-layers:" + sleepTime;
-      log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceClusterIPToUse);
+      log.info({app: 'this', phase: 'operational', id: id}, "Sending next layer request for : " + nextServiceClusterIPToUse + " with delay of " + sleepTime +" ms");
+      
       sendNextRequest(function (valid, text) {
         if (valid == true) {
           text = text.replace(/"/g,"");
