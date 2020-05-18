@@ -36,7 +36,7 @@ spec:
           - name: VERSION_ID
             value: v1
           - name: NEXT_LAYER_NAME
-            value: layer2
+            value: layer2-a,layer2-b
 ---
 apiVersion: v1
 kind: Service
