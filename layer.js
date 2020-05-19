@@ -119,6 +119,7 @@ app.get('/call-layers', (request, response) => {
 app.get('/call-layers-sleep:sleepTime', (request, response) => {
   log.info({phase: 'run'}, "recieved incoming request on sleeper api");
   counter++;
+  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   var sleepTime = request.params.sleepTime;
   sleepTime = sleepTime.substr(1, sleepTime.length);
   if (ignoreDelaysFlag) {
@@ -179,7 +180,6 @@ function sendNextRequest(cb) {
       log.info({phase: 'run'}, "Got data end : " + dataResponse);
       cb(true, dataResponse);
     });
-
   });
   
   request.on("error", (err) => {
