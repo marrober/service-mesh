@@ -107,7 +107,10 @@ app.get('/call-layers', (request, response) => {
         text = text.replace(/"/g,"");
         messageText += " ----> " + text;
         console.log(messageText);
-        log.info({phase: 'run', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText + " " + code);
+        log.info({phase: 'status', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText + " " + code);
+        if (code != 200) {
+          response.code = code;
+        }
         response.send(messageText);
       }
     });
@@ -142,7 +145,10 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
           text = text.replace(/"/g,"");
           messageText += " ----> " + text;
           console.log(messageText);
-          log.info({phase: 'run', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText + " " + code);
+          log.info({phase: 'status', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText + " " + code);
+          if (code != 200) {
+            response.code = code;
+          }
           response.send(messageText);
         }
       });
