@@ -8,9 +8,33 @@ spec:
   - name: v1
     labels:
       version: v1
+    trafficPolicy:
+      connectionPool:
+        tcp:
+          maxConnections: 1
+        http:
+          http1MaxPendingRequests: 1
+          maxRequestsPerConnection: 1
+      outlierDetection:
+        baseEjectionTime: 180.000s
+        consecutiveErrors: 1
+        interval: 1.000s
+        maxEjectionPercent: 100   
   - name: v2
     labels:
       version: v2   
+    trafficPolicy:
+      connectionPool:
+        tcp:
+          maxConnections: 1
+        http:
+          http1MaxPendingRequests: 1
+          maxRequestsPerConnection: 1
+      outlierDetection:
+        baseEjectionTime: 180.000s
+        consecutiveErrors: 1
+        interval: 1.000s
+        maxEjectionPercent: 100   
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -22,7 +46,7 @@ spec:
   http:
   - match:
     - uri:
-        exact: /call-layers
+        prefix: /call-layers
     - uri:
         exact: /get-info        
     - uri:

@@ -102,12 +102,12 @@ app.get('/call-layers', (request, response) => {
     options.host = nextServiceClusterIPToUse;
     options.path = "/call-layers";
     log.info({phase: 'run'}, "Sending next layer request for : " + nextServiceClusterIPToUse);
-    sendNextRequest(function (valid, text) {
+    sendNextRequest(function (valid, text, code ) {
       if (valid == true) {
         text = text.replace(/"/g,"");
         messageText += " ----> " + text;
         console.log(messageText);
-        log.info({phase: 'run', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
+        log.info({phase: 'run', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText + " " + code));
         response.send(messageText);
       }
     });
@@ -137,12 +137,12 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
       options.path = "/call-layers-sleep:" + sleepTime;
       log.info({phase: 'run'}, "Sending next layer request for : " + nextServiceClusterIPToUse + " with delay of " + sleepTime +" ms");
 
-      sendNextRequest(function (valid, text) {
+      sendNextRequest(function (valid, text, code) {
         if (valid == true) {
           text = text.replace(/"/g,"");
           messageText += " ----> " + text;
           console.log(messageText);
-          log.info({phase: 'run', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText);
+          log.info({phase: 'run', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText + " " + code);
           response.send(messageText);
         }
       });
@@ -178,7 +178,7 @@ function sendNextRequest(cb) {
 
     res.on('end', () => {
       log.info({phase: 'run'}, "Got data end : " + dataResponse);
-      cb(true, dataResponse);
+      cb(true, dataResponse, res.statusCode);
     });
   });
   
