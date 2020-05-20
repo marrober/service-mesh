@@ -107,7 +107,7 @@ app.get('/call-layers', (request, response) => {
         text = text.replace(/"/g,"");
         messageText += " ----> " + text;
         console.log(messageText);
-        log.info({phase: 'run', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText + " " + code));
+        log.info({phase: 'run', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText + " " + code);
         response.send(messageText);
       }
     });
