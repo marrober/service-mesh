@@ -125,11 +125,14 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   var sleepTime = request.params.sleepTime;
   sleepTime = sleepTime.substr(1, sleepTime.length);
+  var thisSleepTime = 0;
   if (ignoreDelaysFlag) {
-    sleepTime = 0;
+    thisSleepTime = 0;
+  } else {
+    thisSleepTime = sleepTime;
   }
   log.info({phase: 'timing'}, "sleeping ... " + sleepTime);
-  sleep(sleepTime).then(() => {
+  sleep(thisSleepTime).then(() => {
     messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + sleepTime + " ms)";
     var counterMessage = sprintfJS.sprintf("%04d", counter);
     log.info({phase: 'run'}, messageText);
