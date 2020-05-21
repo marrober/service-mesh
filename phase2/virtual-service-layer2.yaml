@@ -5,8 +5,6 @@ metadata:
 spec:
   hosts:
   - layer2
-  gateways:
-  - layers-gateway-pebbles
   http:
   - match:
     - uri:

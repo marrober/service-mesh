@@ -1,0 +1,69 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: layer4
+spec:
+  host: layer4
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+  - name: v3
+    labels:
+      version: v3
+  - name: v4
+    labels:
+      version: v4
+  - name: v5
+    labels:
+      version: v5
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: layer4
+spec:
+  hosts:
+  - layer4
+  http:
+  - match:
+    - uri:
+        prefix: /call-layers
+    - uri:
+        exact: /get-info        
+    - uri:
+        exact: /
+    route:
+    - destination:
+        host: layer4
+        port:
+          number: 8080
+        subset: v1
+      weight: 40
+    - destination:
+        host: layer4
+        port:
+          number: 8080
+        subset: v2
+      weight: 30
+    - destination:
+        host: layer4
+        port:
+          number: 8080
+        subset: v3
+      weight: 20
+    - destination:
+        host: layer4
+        port:
+          number: 8080
+        subset: v4
+      weight: 5
+    - destination:
+        host: layer4
+        port:
+          number: 8080
+        subset: v5
+      weight: 5
