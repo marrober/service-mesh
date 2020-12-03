@@ -12,7 +12,7 @@ var log = bunyan.createLogger({
     }]
   });
 
-/* API endpoints ......
+/* API endpoints ...........
     /             - Get the IP address of the current layer.
     /call-layers  - Call the next layer microservice indicated by the environment variable NEXT_LAYER_NAME
     /sendIgnore   - Tell the receiving next layer container to ignore further requests (used for liveness and readiness testing)
