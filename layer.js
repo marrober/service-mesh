@@ -20,6 +20,7 @@ var log = bunyan.createLogger({
 */
 
 var serviceNames = process.env.NEXT_LAYER_NAME;
+var serviceNamespace = process.env.NEXT_LAYER_NAMESPACE;
 var thisLayerName = process.env.THIS_LAYER_NAME;
 var ignoreDelays = process.env.IGNORE_DELAYS;
 var versionID = process.env.VERSION_ID;
@@ -57,18 +58,14 @@ if (typeof serviceNames != 'undefined') {
       console.log("Processing service : " + service);
       service = service.trim();
 
-      var nextServiceClusterIPEnvName = service.toUpperCase().concat("_SERVICE_HOST");
-      nextServiceClusterIPEnvName = nextServiceClusterIPEnvName.replace('-', '_');
+      var nextServiceClusterAddress = service.concat(".").concat(serviceNamespace).concat(".svc.cluster.local:").concat(nextServicePort);
 
-      console.log(" ... service name " + nextServiceClusterIPEnvName);
-      nextServiceClusterIP.push(process.env[nextServiceClusterIPEnvName]);
-      console.log("next service ip address : " + nextServiceClusterIP);
-      log.info({phase: 'setup'}, "next interface service host : " + nextServiceClusterIP);
+      console.log(" ... service name " + nextServiceClusterAddress);
+      nextServiceClusterIP.push(nextServiceClusterAddress);
+      log.info({phase: 'setup'}, "next interface service host : " + nextServiceClusterAddress);
     });
-  } 
+  }
 
-  console.log("next interface service port : " + nextServicePort);
-  log.info({phase: 'setup'}, "next interface service port : " + nextServicePort);
 } else {
   console.log("Last node in the line");
   log.info({phase: 'setup'}, "Last node in the line");
@@ -190,7 +187,7 @@ function sendNextRequest(cb) {
       cb(true, dataResponse, res.statusCode);
     });
   });
-  
+
   request.on("error", (err) => {
     log.error("Error : " + err.message);
   });
