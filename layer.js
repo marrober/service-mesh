@@ -42,8 +42,7 @@ log.info({phase: 'setup'}, "This app ip address  : " + ip.address());
 console.log("Application is starting......");
 var counter = 0;
 
-var nextServiceClusterIP = [];
-var nextServiceClusterIPEnvName = "";
+var serviceClusterAddressList = [];
 
 log.info({phase: 'setup'}, "This app name  : " + thisLayerName);
 console.log("This app name  : " + thisLayerName);
@@ -58,10 +57,10 @@ if (typeof serviceNames != 'undefined') {
       console.log("Processing service : " + service);
       service = service.trim();
 
-      var nextServiceClusterAddress = service.concat(".").concat(serviceNamespace).concat(".svc.cluster.local:").concat(nextServicePort);
+      var nextServiceClusterAddress = service.concat(".").concat(serviceNamespace).concat(".svc.cluster.local:");
 
       console.log(" ... service name " + nextServiceClusterAddress);
-      nextServiceClusterIP.push(nextServiceClusterAddress);
+      serviceClusterAddressList.push(nextServiceClusterAddress);
       log.info({phase: 'setup'}, "next interface service host : " + nextServiceClusterAddress);
     });
   }
@@ -72,7 +71,7 @@ if (typeof serviceNames != 'undefined') {
 }
 
 var options = {
-  host: nextServiceClusterIP,
+  host: nextServiceClusterAddress,
   port: nextServicePort,
   path: "",
   method: 'GET'
@@ -94,11 +93,11 @@ app.get('/call-layers', (request, response) => {
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   log.info({phase: 'run'}, messageText);
 
-  if (nextServiceClusterIP.length > 0) {
-    var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
-    options.host = nextServiceClusterIPToUse;
+  if (serviceClusterAddressList.length > 0) {
+    var nextServiceClusterAddressToUse = serviceClusterAddressList[getRandomIndex(serviceClusterAddressList.length)];
+    options.host = nextServiceClusterAddressToUse;
     options.path = "/call-layers";
-    log.info({phase: 'run'}, "Sending next layer request for : " + nextServiceClusterIPToUse);
+    log.info({phase: 'run'}, "Sending next layer request for : " + nextServiceClusterAddressToUse);
     sendNextRequest(function (valid, text, code ) {
       if (valid == true) {
         text = text.replace(/"/g,"");
@@ -134,11 +133,11 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
     var counterMessage = sprintfJS.sprintf("%04d", counter);
     log.info({phase: 'run'}, messageText);
 
-    if (nextServiceClusterIP.length > 0) {
-      var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
-      options.host = nextServiceClusterIPToUse;
+    if (serviceClusterAddressList.length > 0) {
+      var nextServiceClusterAddressToUse = serviceClusterAddressList[getRandomIndex(serviceClusterAddressList.length)];
+      options.host = nextServiceClusterAddressToUse;
       options.path = "/call-layers-sleep:" + sleepTime;
-      log.info({phase: 'run'}, "Sending next layer request for : " + nextServiceClusterIPToUse + " with delay of " + sleepTime +" ms");
+      log.info({phase: 'run'}, "Sending next layer request for : " + nextServiceClusterAddressToUse + " with delay of " + sleepTime +" ms");
 
       sendNextRequest(function (valid, text, code) {
         if (valid == true) {
