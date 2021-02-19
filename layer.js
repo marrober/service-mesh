@@ -57,7 +57,7 @@ if (typeof serviceNames != 'undefined') {
       console.log("Processing service : " + service);
       service = service.trim();
 
-      var nextServiceClusterAddress = service.concat(".").concat(serviceNamespace).concat(".svc.cluster.local:");
+      var nextServiceClusterAddress = service.concat(".").concat(serviceNamespace).concat(".svc.cluster.local");
 
       console.log(" ... service name " + nextServiceClusterAddress);
       serviceClusterAddressList.push(nextServiceClusterAddress);
@@ -71,7 +71,7 @@ if (typeof serviceNames != 'undefined') {
 }
 
 var options = {
-  host: nextServiceClusterAddress,
+  host: "",
   port: nextServicePort,
   path: "",
   method: 'GET'
