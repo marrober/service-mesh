@@ -193,7 +193,7 @@ function sendNextRequest(cb) {
       socket.on('timeout', function() {
           req.abort();
       });
-  }
+  });
 
   request.on("error", (err) => {
     log.error("Error : " + err.message);
