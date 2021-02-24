@@ -25,6 +25,7 @@ var thisLayerName = process.env.THIS_LAYER_NAME;
 var ignoreDelays = process.env.IGNORE_DELAYS;
 var versionID = process.env.VERSION_ID;
 var ignoreDelaysFlag = false;
+var timeout = 3000;
 
 if (typeof ignoreDelays != 'undefined') {
   if (ignoreDelays.toUpperCase() == "TRUE") {
@@ -103,7 +104,7 @@ app.get('/call-layers', (request, response) => {
         text = text.replace(/"/g,"");
         messageText += " ----> " + text;
         console.log(messageText);
-        log.info({phase: 'status', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText + " " + code);
+        log.info({phase: 'status', counter: counter, this_ip: ip.address(), next_ip: text}, counterMessage + " " + messageText + " " + code);
         if (code != 200) {
           response.code = code;
         }
@@ -144,7 +145,7 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
           text = text.replace(/"/g,"");
           messageText += " ----> " + text;
           console.log(messageText);
-          log.info({phase: 'status', counter: counter, this_ip: ip.address(), slave_ip: text}, counterMessage + " " + messageText + " " + code);
+          log.info({phase: 'status', counter: counter, this_ip: ip.address(), next_ip: text}, counterMessage + " " + messageText + " " + code);
           if (code != 200) {
             response.code = code;
           }
@@ -171,10 +172,10 @@ console.log("Listening on port " + port);
 app.listen(port, () => log.info({phase: 'setup'}, "Listening on port " + port));
 
 function sendNextRequest(cb) {
-  var slaveURL = "http://" + options.host + ":" + options.port + options.path;
-  log.info({phase: 'run'}, "Sending message to next layer : " + slaveURL);
+  var nextURL = "http://" + options.host + ":" + options.port + options.path;
+  log.info({phase: 'run'}, "Sending message to next layer : " + nextURL);
 
-  var request = http.get(slaveURL, (res) => {
+  var request = http.get(nextURL, (res) => {
     let dataResponse = '';
     res.on('data', (chunk) => {
       dataResponse += chunk;
@@ -186,6 +187,13 @@ function sendNextRequest(cb) {
       cb(true, dataResponse, res.statusCode);
     });
   });
+
+  request.on('socket', function (socket) {
+      socket.setTimeout(timeout);
+      socket.on('timeout', function() {
+          req.abort();
+      });
+  }
 
   request.on("error", (err) => {
     log.error("Error : " + err.message);
