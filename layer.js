@@ -191,7 +191,7 @@ function sendNextRequest(cb) {
   request.on('socket', function (socket) {
       socket.setTimeout(timeout);
       socket.on('timeout', function() {
-          req.abort();
+          request.abort();
       });
   });
 
