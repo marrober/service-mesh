@@ -188,19 +188,13 @@ function sendNextRequest(cb) {
     });
   });
 
-  request.on('socket', function (socket) {
-      socket.setTimeout(timeout);
-      socket.on('timeout', function() {
-          request.abort();
-      });
-  });
-
   request.on("error", (err) => {
     log.error("Error : " + err.message);
   });
 
-  request.setTimeout( 10000, function( ) {
+  request.setTimeout( 2000, function( ) {
     log.error("Error : timeout");
+    cb(true, dataResponse, res.statusCode);
   });
 
   request.end();
