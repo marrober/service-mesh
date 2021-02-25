@@ -153,7 +153,7 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
         } else {
           console.log("Error : no response ...");
           log.info({phase: 'status', counter: counter, this_ip: ip.address() }, "Error : no response ...");
-          response.send("Error : no response ...");     
+          response.send("Error : no response ...");
         }
       });
     } else {
@@ -198,7 +198,7 @@ function sendNextRequest(cb) {
 
   request.setTimeout( 2000, function( ) {
     log.error("Error : timeout");
-    cb(false, dataResponse, res.statusCode);
+    cb(false, '', res.statusCode);
   });
 
   request.end();
