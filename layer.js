@@ -198,7 +198,7 @@ function sendNextRequest(cb) {
 
   request.setTimeout( 2000, function( ) {
     log.error("Error : timeout");
-    cb(false, '', res.statusCode);
+    cb(false, '', 500);
   });
 
   request.end();
