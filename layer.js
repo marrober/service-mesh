@@ -102,9 +102,14 @@ app.get('/call-layers', (request, response) => {
     sendNextRequest(function (valid, text, code ) {
       if (valid == true) {
         text = text.replace(/"/g,"");
+        textSplit = text.split(" ");
+        next_name = textSplit[0];
+        next_version = nextSplit[1];
+        next_ip = nextSplit[2];
+
         messageText += " ----> " + text;
         console.log(messageText);
-        log.info({phase: 'status', counter: counter, this_ip: ip.address(), next_ip: text}, counterMessage + " " + messageText + " " + code);
+        log.info({phase: 'call-layers', counter: counter, this_ip: ip.address(), this_name: thisLayerName, this_version: versionID, next_ip: next_ip, next_name: next_name, next_version: next_version});
         if (code != 200) {
           response.code = code;
         }
