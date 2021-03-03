@@ -104,10 +104,10 @@ app.get('/call-layers', (request, response) => {
         text = text.replace(/"/g,"");
         textSplit = text.split(" ");
         next_name = textSplit[0];
-        next_version = textSplit[1].replace(/(/, "");
-        next_version = next_version.replace(/)/, "");
-        next_ip = textSplit[2].replace(/[/, "");
-        next_ip = next_ip.replace(/]/, "");
+        next_version = textSplit[1].replace("(", "");
+        next_version = next_version.replace(")", "");
+        next_ip = textSplit[2].replace("[", "");
+        next_ip = next_ip.replace("]", "");
 
         messageText += " ----> " + text;
         console.log(messageText);
