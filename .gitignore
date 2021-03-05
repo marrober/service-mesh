@@ -1,3 +1,4 @@
 service-mesh/istio-master/*
 
 .odo/odo-file-index.json.odo/
+.odo/
