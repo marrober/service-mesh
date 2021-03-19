@@ -8,7 +8,7 @@ const app = express();
 var log = bunyan.createLogger({
       name: "layer-app",
       streams: [{
-      path: '/var/log/application-events.log',
+      path: './application-events.log',
     }]
   });
 
