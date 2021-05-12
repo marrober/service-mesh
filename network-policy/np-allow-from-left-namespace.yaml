@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-left-namespace
+spec:
+  podSelector:
+    matchLabels: 
+      deployment: richard    
+  policyTypes:
+  - Ingress 
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          projectName: left
