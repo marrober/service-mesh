@@ -1,4 +1,4 @@
-FROM default-route-openshift-image-registry.apps.cluster-cbd4.cbd4.sandbox1842.opentlc.com/layers-01/layers-01-02:latest as input
+FROM default-route-openshift-image-registry.apps.cluster-0253.0253.sandbox563.opentlc.com/layers/layers-app:latest as input
 FROM registry.redhat.io/rhel8/nodejs-14 as runtime-image
 COPY --from=input /opt/app-root/src/layer.js /opt/app-root/src/layer.js
 COPY --from=input /opt/app-root/src/node_modules/ /opt/app-root/src/node_modules/

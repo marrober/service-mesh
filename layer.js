@@ -6,11 +6,22 @@ var bunyan = require('bunyan');
 const app = express();
 
 var log = bunyan.createLogger({
-      name: "layer-app",
-      streams: [{
-      path: './application-events.log',
-    }]
-  });
+  name: "layer-app",
+  streams: [{
+    path: './application-events.log',
+  }]
+});
+
+//const LoggerFactory = require('slf4n-logging');
+ 
+//const log = LoggerFactory.getLogger('app:layers');
+
+log.info('Some info logging');
+
+log.debug('some debug line %s', "my string variable");
+log.debug('some debug line %o', log);
+log.error('some error line');  
+
 
 /* API endpoints ......
     /             - Get the IP address of the current layer.
