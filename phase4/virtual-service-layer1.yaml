@@ -12,6 +12,8 @@ spec:
     - uri:
         exact: /call-layers
     - uri:
+        prefix: /call-layers-sleep         
+    - uri:
         exact: /get-info        
     - uri:
         exact: /
@@ -19,4 +21,4 @@ spec:
     - destination:
         host: layer1 
         port:
-          number: 8080
+          number: 8080  

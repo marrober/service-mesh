@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - env:
-        image: quay.io/marrober/layers:latest
+        image: quay.io/marrober/layers:10
         imagePullPolicy: Always
         name: layer1
         ports:

@@ -22,7 +22,9 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /call-layers
+        exact: /call-layers
+    - uri:
+        prefix: /call-layers-sleep        
     - uri:
         exact: /get-info        
     - uri:
@@ -40,4 +42,4 @@ spec:
           number: 8080
         subset: inst-2
       weight: 70
-    timeout: 2.500s
+    timeout: 1.000s
