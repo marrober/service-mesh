@@ -101,7 +101,7 @@ app.get('/call-layers', (request, response) => {
         next_ip = next_ip.replace("]", "");
 
         messageText += " ----> " + text;
-        console.log("phase: /call-layers, counter: counter, this_ip: ip.address(), this_name: thisLayerName, this_version: versionID, next_ip: next_ip, next_name: next_name, next_version: next_version");
+        // console.log("phase: /call-layers, counter: counter, this_ip: ip.address(), this_name: thisLayerName, this_version: versionID, next_ip: next_ip, next_name: next_name, next_version: next_version");
         if (code != 200) {
           response.code = code;
         }
@@ -141,13 +141,13 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
         if (valid == true) {
           text = text.replace(/"/g,"");
           messageText += " ----> " + text;
-          console.log("phase: /call-layers-sleep, counter: counter, this_ip: ip.address(), next_ip: text, counterMessage" + " " + messageText + " " + code);
+          //console.log("phase: /call-layers-sleep, counter: counter, this_ip: ip.address(), next_ip: text, counterMessage" + " " + messageText + " " + code);
           if (code != 200) {
             response.code = code;
           }
           response.send(messageText);
         } else {
-          console.log("phase: /call-layers-sleep, counter: counter, this_ip: ip.address()", "Error : no response ...");
+          //console.log("phase: /call-layers-sleep, counter: counter, this_ip: ip.address()", "Error : no response ...");
           response.send("Error : no response ...");
         }
       });
