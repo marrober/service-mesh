@@ -16,7 +16,7 @@ var log = bunyan.createLogger({
     /             - Get the IP address of the current layer.
     /call-layers  - Call the next layer microservice indicated by the environment variable NEXT_LAYER_NAME
     /sendIgnore   - Tell the receiving next layer container to ignore further requests (used for liveness and readiness testing)
-    /ignore       - Receive a request to ignore further communication.
+    /ignore       - Receive a request to ignore further communication...
 */
 
 var serviceNames = process.env.NEXT_LAYER_NAME;
