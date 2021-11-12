@@ -91,7 +91,7 @@ app.get('/call-layers', (request, response) => {
     options.host = nextServiceClusterAddressToUse;
     options.path = "/call-layers";
     console.log("phase: /call-layers", "Sending next layer request for : " + nextServiceClusterAddressToUse);
-    sendNextRequest(function (valid, text, code ) {
+    sendNextRequest(request.headers, function (valid, text, code ) {
       if (valid == true) {
         text = text.replace(/"/g,"");
         textSplit = text.split(" ");
@@ -168,14 +168,13 @@ app.get('/get-info', (request, response) => {
   response.send(messageText);
 });
 
-console.log("phase: setup", "Listening on port " + port);
 app.listen(port, () => console.log("phase: setup", "Listening on port " + port));
 
-function sendNextRequest(cb) {
+function sendNextRequest(headers, cb) {
   var nextURL = "http://" + options.host + ":" + options.port + options.path;
   console.log("phase: sendNextRequest()", "Sending message to next layer : " + nextURL);
 
-  var request = http.get(nextURL, (res) => {
+  var request = http.request(options, (res) => {
     let dataResponse = '';
     res.on('data', (chunk) => {
       dataResponse += chunk;
