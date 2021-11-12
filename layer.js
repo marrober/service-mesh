@@ -84,6 +84,7 @@ app.get('/call-layers', (request, response) => {
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   console.log("phase: /call-layers", messageText);
+  console.log(JSON.stringify(request.headers));
 
   if (serviceClusterAddressList.length > 0) {
     var nextServiceClusterAddressToUse = serviceClusterAddressList[getRandomIndex(serviceClusterAddressList.length)];
