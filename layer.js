@@ -65,7 +65,8 @@ var options = {
   host: "",
   port: nextServicePort,
   path: "",
-  method: 'GET'
+  method: 'GET',
+  headers: ""
 };
 
 var ip = require("ip");
@@ -173,6 +174,10 @@ app.listen(port, () => console.log("phase: setup", "Listening on port " + port))
 function sendNextRequest(headers, cb) {
   var nextURL = "http://" + options.host + ":" + options.port + options.path;
   console.log("phase: sendNextRequest()", "Sending message to next layer : " + nextURL);
+
+  console.log("phase: sendNextRequest()", "Headers : " + headers);
+
+  options.headers = headers;
 
   var request = http.request(options, (res) => {
     let dataResponse = '';
