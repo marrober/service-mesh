@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - env:
-        image: quay.io/marrober/layers:11
+        image: quay.io/marrober/layers:10
         imagePullPolicy: Always
         name: layer1
         ports:
@@ -37,8 +37,6 @@ spec:
             value: v1
           - name: NEXT_LAYER_NAME
             value: layer2
-          - name: NEXT_LAYER_NAMESPACE
-            value: service-mesh-01
 ---
 apiVersion: v1
 kind: Service
