@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - env:
-        image: quay.io/marrober/layers:11
+        image: quay.io/marrober/layers:10
         imagePullPolicy: Always
         name: layer2
         ports:
@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
       - env:
-        image: quay.io/marrober/layers:11
+        image: quay.io/marrober/layers:10
         imagePullPolicy: Always
         name: layer2
         ports:
