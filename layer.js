@@ -70,7 +70,8 @@ var options = {
   host: nextServiceClusterIP,
   port: nextServicePort,
   path: "",
-  method: 'GET'
+  method: 'GET',
+  headers: ""  
 };
 
 var ip = require("ip");
@@ -87,14 +88,15 @@ app.get('/call-layers', (request, response) => {
   counter++;
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
-  console.log("phase: run", messageText);
+  console.log("phase: /call-layers", messageText);
+  console.log(JSON.stringify(request.headers));
 
   if (nextServiceClusterIP.length > 0) {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
     options.host = nextServiceClusterIPToUse;
     options.path = "/call-layers";
     console.log("phase: run", "Sending next layer request for : " + nextServiceClusterIPToUse);
-    sendNextRequest(function (valid, text, code ) {
+    sendNextRequest(request.headers, function (valid, text, code ) {
       if (valid == true) {
         text = text.replace(/"/g,"");
         messageText += " ----> " + text;
@@ -134,7 +136,7 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
       options.path = "/call-layers-sleep:" + sleepTime;
       console.log("phase: run", "Sending next layer request for : " + nextServiceClusterIPToUse + " with delay of " + sleepTime +" ms");
 
-      sendNextRequest(function (valid, text, code) {
+      sendNextRequest(request.headers, function (valid, text, code) {
         if (valid == true) {
           text = text.replace(/"/g,"");
           messageText += " ----> " + text;
@@ -164,11 +166,14 @@ app.get('/get-info', (request, response) => {
 console.log("Listening on port " + port);
 app.listen(port, () => console.log("phase: setup", "Listening on port " + port));
 
-function sendNextRequest(cb) {
+function sendNextRequest(headers, cb) {
   var nextURL = "http://" + options.host + ":" + options.port + options.path;
   console.log("phase: run", "Sending message to next layer : " + nextURL);
+  console.log("phase: sendNextRequest()", "Headers : " + headers);
 
-  var request = http.get(nextURL, (res) => {
+  options.headers = headers;
+
+  var request = http.request(options, (res) => {
     let dataResponse = '';
     res.on('data', (chunk) => {
       dataResponse += chunk;
