@@ -71,10 +71,7 @@ var options = {
   port: nextServicePort,
   path: "",
   method: 'GET',
-  headers: {
-      'username': username,
-      'Content-Type':'application/x-www-form-urlencoded'
-  },
+  headers: ""
 };
 
 
