@@ -94,7 +94,7 @@ app.get('/call-layers', (request, response) => {
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   console.log("phase: /call-layers", messageText);
   console.log(JSON.stringify(request.headers));
-  username = req.headers['username'];
+  var username = req.headers['username'];
 
   if (nextServiceClusterIP.length > 0) {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
