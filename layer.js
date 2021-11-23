@@ -169,7 +169,7 @@ function sendNextRequest(headers, cb) {
   var nextURL = "http://" + options.host + ":" + options.port + options.path;
   console.log("phase: run", "Sending message to next layer : " + nextURL);
 
-  // options.headers = headers;
+  options.headers = headers;
 
   var request = http.request(options, (res) => {
     let dataResponse = '';
