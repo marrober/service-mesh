@@ -163,7 +163,7 @@ app.get('/get-info', (request, response) => {
 console.log("Listening on port " + port);
 app.listen(port, () => console.log("phase: setup", "Listening on port " + port));
 
-function sendNextRequest(headers, cb) {
+function sendNextRequest(options, cb) {
   var nextURL = "http://" + options.host + ":" + options.port + options.path;
   console.log("phase: run", "Sending message to next layer : " + nextURL);
 
