@@ -96,7 +96,7 @@ app.get('/call-layers', (request, response) => {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
 
     options = {
-      host: nextServiceClusterIP,
+      host: nextServiceClusterIPToUse,
       port: nextServicePort,
       path: "/call-layers",
       method: 'GET',
