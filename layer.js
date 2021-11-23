@@ -90,8 +90,7 @@ app.get('/call-layers', (request, response) => {
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   console.log("phase: /call-layers", messageText);
-  console.log(JSON.stringify(request.headers));
-  var username = req.headers['username'];
+  var username = request.headers['username'];
 
   if (nextServiceClusterIP.length > 0) {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
@@ -106,6 +105,9 @@ app.get('/call-layers', (request, response) => {
           'Content-Type':'application/x-www-form-urlencoded'
       },
     };
+
+    console.log(JSON.stringify(options.headers));
+
     sendNextRequest(function (valid, text, code ) {
       if (valid == true) {
         text = text.replace(/"/g,"");
