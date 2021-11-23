@@ -71,8 +71,12 @@ var options = {
   port: nextServicePort,
   path: "",
   method: 'GET',
-  headers: ""  
+  headers: {
+      'username': username,
+      'Content-Type':'application/x-www-form-urlencoded'
+  },
 };
+
 
 var ip = require("ip");
 var messageText = "";
@@ -90,12 +94,22 @@ app.get('/call-layers', (request, response) => {
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   console.log("phase: /call-layers", messageText);
   console.log(JSON.stringify(request.headers));
+  username = req.headers['username'];
 
   if (nextServiceClusterIP.length > 0) {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
-    options.path = "/call-layers";
-    options.host = nextServiceClusterIPToUse;
-    sendNextRequest(request.headers, function (valid, text, code ) {
+
+    options = {
+      host: nextServiceClusterIP,
+      port: nextServicePort,
+      path: "/call-layers",
+      method: 'GET',
+      headers: {
+          'username': username,
+          'Content-Type':'application/x-www-form-urlencoded'
+      },
+    };
+    sendNextRequest(function (valid, text, code ) {
       if (valid == true) {
         text = text.replace(/"/g,"");
         messageText += " ----> " + text;
@@ -135,7 +149,7 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
       options.host = nextServiceClusterIPToUse;
       console.log("phase: run", "Sending next layer request for : " + nextServiceClusterIPToUse + " with delay of " + sleepTime +" ms");
 
-      sendNextRequest(request.headers, function (valid, text, code) {
+      sendNextRequest(function (valid, text, code) {
         if (valid == true) {
           text = text.replace(/"/g,"");
           messageText += " ----> " + text;
@@ -165,11 +179,10 @@ app.get('/get-info', (request, response) => {
 console.log("Listening on port " + port);
 app.listen(port, () => console.log("phase: setup", "Listening on port " + port));
 
-function sendNextRequest(headers, cb) {
+function sendNextRequest(cb) {
   var nextURL = "http://" + options.host + ":" + options.port + options.path;
   console.log("phase: run", "Sending message to next layer : " + nextURL);
-
-  options.headers = headers;
+  console.log(JSON.stringify(options));
 
   var request = http.request(options, (res) => {
     let dataResponse = '';
