@@ -1,0 +1,40 @@
+echo "clear mTLS"
+
+oc delete peerauthentication/default
+oc delete dr --all
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

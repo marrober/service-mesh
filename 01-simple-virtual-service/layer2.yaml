@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - env:
-        image: quay.io/marrober/layers:10
+        image: default-route-openshift-image-registry.apps.skylake.demolab.local/service-mesh-01/layers-git:latest
         imagePullPolicy: Always
         name: layer2
         ports:
@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
       - env:
-        image: quay.io/marrober/layers:10
+        image: default-route-openshift-image-registry.apps.skylake.demolab.local/service-mesh-01/layers-git:latest
         imagePullPolicy: Always
         name: layer2
         ports:

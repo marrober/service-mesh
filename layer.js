@@ -119,7 +119,7 @@ app.get('/call-layers', (request, response) => {
       if (valid == true) {
         text = text.replace(/"/g,"");
         messageText += " ----> " + text;
-        console.log("phase: status counter: " + counter + "this_ip: " + ip.address() +" "  + messageText + " " + code);
+        console.log("phase: status counter: " + counter + "  this_ip: " + ip.address() +" "  + messageText + " " + code);
         if (code != 200) {
           response.code = code;
         }
@@ -180,6 +180,22 @@ app.get('/get-info', (request, response) => {
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   console.log("phase: run", messageText);
   response.send(messageText);
+});
+
+app.get('/get-json', (request, response) => {
+  const data = {
+    name: "Mark Roberts",
+    company: "Red Hat",
+    title: "Senior solution architect"
+  }
+
+  const jsonStr = JSON.stringify(data);
+
+  console.log(jsonStr);
+
+  console.log("phase: run", "Sending back json data");
+  response.setHeader('Content-Type', 'application/json');
+  response.send(jsonStr);
 });
 
 console.log("Listening on port " + port);
