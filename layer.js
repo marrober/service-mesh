@@ -93,9 +93,7 @@ app.get('/call-layers', (request, response) => {
 
   if (nextServiceClusterIP.length > 0) {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
-    options.host = nextServiceClusterIPToUse;
     options.path = "/call-layers";
-    console.log("phase: run", "Sending next layer request for : " + nextServiceClusterIPToUse);
     sendNextRequest(request.headers, function (valid, text, code ) {
       if (valid == true) {
         text = text.replace(/"/g,"");
@@ -132,7 +130,6 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
 
     if (nextServiceClusterIP.length > 0) {
       var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
-      options.host = nextServiceClusterIPToUse;
       options.path = "/call-layers-sleep:" + sleepTime;
       console.log("phase: run", "Sending next layer request for : " + nextServiceClusterIPToUse + " with delay of " + sleepTime +" ms");
 
@@ -169,11 +166,11 @@ app.listen(port, () => console.log("phase: setup", "Listening on port " + port))
 function sendNextRequest(headers, cb) {
   var nextURL = "http://" + options.host + ":" + options.port + options.path;
   console.log("phase: run", "Sending message to next layer : " + nextURL);
-  console.log("phase: sendNextRequest()", "Headers : " + headers);
 
   options.headers = headers;
+  options.host = nextURL;
 
-  var request = http.get(nextURL, (res) => {
+  var request = http.get(options, (res) => {
     let dataResponse = '';
     res.on('data', (chunk) => {
       dataResponse += chunk;
