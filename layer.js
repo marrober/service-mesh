@@ -95,6 +95,7 @@ app.get('/call-layers', (request, response) => {
 
   if (username.length() == 0) {
     username = "-";
+  }
 
   if (nextServiceClusterIP.length > 0) {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
