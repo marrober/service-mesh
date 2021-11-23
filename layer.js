@@ -180,8 +180,16 @@ app.get('/get-info', (request, response) => {
   response.send(messageText);
 });
 
-app.get('/get-json', (request, response) => {
-/*  const data = {
+app.get('/blah', (request, response) => {
+  counter++;
+  messageText = thisLayerName + " (blah   " + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + " Build source : " + process.env.OPENSHIFT_BUILD_SOURCE + " GIT commit : " + process.env.OPENSHIFT_BUILD_COMMIT;
+  var counterMessage = sprintfJS.sprintf("%04d", counter);
+  console.log("phase: run", messageText);
+  response.send(messageText);
+});
+
+/*app.get('/get-json', (request, response) => {
+ const data = {
     name: "Mark Roberts",
     company: "Red Hat",
     title: "Senior solution architect"
@@ -193,13 +201,13 @@ app.get('/get-json', (request, response) => {
 
   console.log("phase: run", "Sending back json data");
   response.setHeader('Content-Type', 'application/json');
-  response.send(jsonStr);*/
+  response.send(jsonStr);
   counter++;
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + " Build source : " + process.env.OPENSHIFT_BUILD_SOURCE + " GIT commit : " + process.env.OPENSHIFT_BUILD_COMMIT;
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   console.log("phase: run", messageText);
   response.send(messageText);
-});
+});*/
 
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 
