@@ -173,7 +173,7 @@ function sendNextRequest(headers, cb) {
 
   options.headers = headers;
 
-  var request = http.get(options, (res) => {
+  var request = http.get(nextURL, (res) => {
     let dataResponse = '';
     res.on('data', (chunk) => {
       dataResponse += chunk;
