@@ -183,7 +183,7 @@ app.get('/getinfo', (request, response) => {
 });
 
 app.get('/getjson', (request, response) => {
-  const data = {
+/*  const data = {
     name: "Mark Roberts",
     company: "Red Hat",
     title: "Senior solution architect"
@@ -195,7 +195,12 @@ app.get('/getjson', (request, response) => {
 
   console.log("phase: run", "Sending back json data");
   response.setHeader('Content-Type', 'application/json');
-  response.send(jsonStr);
+  response.send(jsonStr);*/
+  counter++;
+  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + " Build source : " + process.env.OPENSHIFT_BUILD_SOURCE + " GIT commit : " + process.env.OPENSHIFT_BUILD_COMMIT;
+  var counterMessage = sprintfJS.sprintf("%04d", counter);
+  console.log("phase: run", messageText);
+  response.send(messageText);
 });
 
 console.log("Listening on port " + port);
