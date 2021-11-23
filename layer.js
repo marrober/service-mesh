@@ -174,7 +174,7 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
 
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
 
-app.get('/get-info', (request, response) => {
+app.get('/getinfo', (request, response) => {
   counter++;
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + " Build source : " + process.env.OPENSHIFT_BUILD_SOURCE + " GIT commit : " + process.env.OPENSHIFT_BUILD_COMMIT;
   var counterMessage = sprintfJS.sprintf("%04d", counter);
@@ -182,7 +182,7 @@ app.get('/get-info', (request, response) => {
   response.send(messageText);
 });
 
-app.get('/get-json', (request, response) => {
+app.get('/getjson', (request, response) => {
   const data = {
     name: "Mark Roberts",
     company: "Red Hat",
