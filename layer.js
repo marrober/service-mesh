@@ -172,9 +172,7 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
   });
 });
 
-const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
-
-app.get('/getinfo', (request, response) => {
+app.get('/get-info', (request, response) => {
   counter++;
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + " Build source : " + process.env.OPENSHIFT_BUILD_SOURCE + " GIT commit : " + process.env.OPENSHIFT_BUILD_COMMIT;
   var counterMessage = sprintfJS.sprintf("%04d", counter);
@@ -182,7 +180,7 @@ app.get('/getinfo', (request, response) => {
   response.send(messageText);
 });
 
-app.get('/getjson', (request, response) => {
+app.get('/get-json', (request, response) => {
 /*  const data = {
     name: "Mark Roberts",
     company: "Red Hat",
@@ -202,6 +200,10 @@ app.get('/getjson', (request, response) => {
   console.log("phase: run", messageText);
   response.send(messageText);
 });
+
+const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
+
+
 
 console.log("Listening on port " + port);
 app.listen(port, () => console.log("phase: setup", "Listening on port " + port));
