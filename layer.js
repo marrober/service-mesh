@@ -90,12 +90,14 @@ app.get('/call-layers', (request, response) => {
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   console.log("phase: /call-layers", messageText);
-  var username= "";
+  var username = "";
   username = request.headers['username'];
 
-  if (username.length == 0) {
+  if ( typeof username == 'undefined') {
     username = "-";
   }
+
+  console.log("Username : ", username);
 
   if (nextServiceClusterIP.length > 0) {
     var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
