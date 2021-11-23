@@ -163,18 +163,18 @@ app.get('/get-info', (request, response) => {
 console.log("Listening on port " + port);
 app.listen(port, () => console.log("phase: setup", "Listening on port " + port));
 
-function sendNextRequest(options, cb) {
+function sendNextRequest(headers, cb) {
   var nextURL = "http://" + options.host + ":" + options.port + options.path;
   console.log("phase: run", "Sending message to next layer : " + nextURL);
 
   options.headers = headers;
-  options.host = nextURL;
 
-  var request = http.get(options, (res) => {
+  var request = http.request(options, (res) => {
     let dataResponse = '';
     res.on('data', (chunk) => {
       dataResponse += chunk;
       console.log("phase: run", "Got data back : " + dataResponse);
+      console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
     });
 
     res.on('end', () => {
@@ -184,7 +184,7 @@ function sendNextRequest(options, cb) {
   });
   
   request.on("error", (err) => {
-    log.error("Error : " + err.message);
+    console.log("Error : " + err.message);
   });
 
   request.setTimeout( 10000, function( ) {
