@@ -88,12 +88,10 @@ app.get('/', (request, response) => {
 });
 
 app.get('/call-layers', (request, response) => {
-  if (skipCallLayersResponses) {
-    if (getRandomIndex(10) > 5) {
-      console.log("sending a 503");
-      response.code = 503;
-      response.send("fail");
-    }
+  if ((skipCallLayersResponses) && (getRandomIndex(10) > 5)) {
+    console.log("sending a 503");
+    response.code = 503;
+    response.send("fail");
   } else {
     counter++;
     messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
