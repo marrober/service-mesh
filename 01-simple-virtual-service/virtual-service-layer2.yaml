@@ -12,6 +12,8 @@ spec:
     - uri:
         exact: /get-info        
     - uri:
+        exact: /get-json           
+    - uri:    
         exact: /
     route:
     - destination:

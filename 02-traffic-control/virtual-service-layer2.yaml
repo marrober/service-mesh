@@ -10,7 +10,9 @@ spec:
     - uri:
         exact: /call-layers
     - uri:
-        exact: /get-info        
+        exact: /get-info     
+    - uri:
+        exact: /get-json              
     - uri:
         exact: /
     route:

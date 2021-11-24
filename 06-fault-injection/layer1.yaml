@@ -36,17 +36,17 @@ spec:
           - name: VERSION_ID
             value: v1
           - name: NEXT_LAYER_NAME
-            value: layer2
+            value: layer2-a,layer2-b
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: layer1
   labels:
-    app: layer1
+    app: layer1    
 spec:
   ports:
   - name: http
     port: 8080
   selector:
-    app: layer1            
+    app: layer1
