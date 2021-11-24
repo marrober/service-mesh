@@ -17,6 +17,8 @@ var ignoreDelays = process.env.IGNORE_DELAYS;
 var versionID = process.env.VERSION_ID;
 var ignoreDelaysFlag = false;
 
+var skipCallLayersResponses = 0;
+
 if (typeof ignoreDelays != 'undefined') {
   if (ignoreDelays.toUpperCase() == "TRUE") {
     ignoreDelaysFlag = true;
@@ -86,48 +88,56 @@ app.get('/', (request, response) => {
 });
 
 app.get('/call-layers', (request, response) => {
-  counter++;
-  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
-  var counterMessage = sprintfJS.sprintf("%04d", counter);
-  console.log("phase: /call-layers", messageText);
-  var username = "";
-  username = request.headers['username'];
-
-  if ( typeof username == 'undefined') {
-    username = "-";
-  }
-
-  console.log("Username : ", username);
-
-  if (nextServiceClusterIP.length > 0) {
-    var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
-
-    options = {
-      host: nextServiceClusterIPToUse,
-      port: nextServicePort,
-      path: "/call-layers",
-      method: 'GET',
-      headers: {
-          'username': username,
-          'Content-Type':'application/x-www-form-urlencoded'
-      },
-    };
-
-    console.log(JSON.stringify(options.headers));
-
-    sendNextRequest(function (valid, text, code ) {
-      if (valid == true) {
-        text = text.replace(/"/g,"");
-        messageText += " ----> " + text;
-        console.log("phase: status counter: " + counter + "  this_ip: " + ip.address() +" "  + messageText + " " + code);
-        if (code != 200) {
-          response.code = code;
-        }
-        response.send(messageText);
-      }
-    });
+  if (skipCallLayersResponses) {
+    if (getRandomIndex(10) > 5) {
+      console.log("sending a 503");
+      response.code = 503;
+      response.send("fail");
+    }
   } else {
-    response.send(messageText);
+    counter++;
+    messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
+    var counterMessage = sprintfJS.sprintf("%04d", counter);
+    console.log("phase: /call-layers", messageText);
+    var username = "";
+    username = request.headers['username'];
+
+    if ( typeof username == 'undefined') {
+      username = "-";
+    }
+
+    console.log("Username : ", username);
+
+    if (nextServiceClusterIP.length > 0) {
+      var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
+
+      options = {
+        host: nextServiceClusterIPToUse,
+        port: nextServicePort,
+        path: "/call-layers",
+        method: 'GET',
+        headers: {
+            'username': username,
+            'Content-Type':'application/x-www-form-urlencoded'
+        },
+      };
+
+      console.log(JSON.stringify(options.headers));
+
+      sendNextRequest(function (valid, text, code ) {
+        if (valid == true) {
+          text = text.replace(/"/g,"");
+          messageText += " ----> " + text;
+          console.log("phase: status counter: " + counter + "  this_ip: " + ip.address() +" "  + messageText + " " + code);
+          if (code != 200) {
+            response.code = code;
+          }
+          response.send(messageText);
+        }
+      });
+    } else {
+      response.send(messageText);
+    }
   }
 });
 
@@ -199,6 +209,12 @@ app.get('/get-json', (request, response) => {
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   console.log("phase: run", messageText);
   response.send(messageText);
+});
+
+app.get('/skip', (request, response) => {
+  skipCallLayersResponses = 1;
+  console.log("skipping some calls to /call-layers");
+  response.send("skipping some calls to /call-layers");
 });
 
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
