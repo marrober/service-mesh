@@ -16,6 +16,7 @@ var thisLayerName = process.env.THIS_LAYER_NAME;
 var ignoreDelays = process.env.IGNORE_DELAYS;
 var versionID = process.env.VERSION_ID;
 var ignoreDelaysFlag = false;
+var skipCounter = 0;
 
 var skipCallLayersResponses = 0;
 
@@ -88,11 +89,12 @@ app.get('/', (request, response) => {
 });
 
 app.get('/call-layers', (request, response) => {
-  if ((skipCallLayersResponses) && (getRandomIndex(10) > 5)) {
-    console.log("sending a 503");
+  if ((skipCallLayersResponses) && (skipCounter++ < 5)) {
+    console.log("sending a 503 - " + skipCounter);
     response.status(503);
     response.send("fail");
   } else {
+    skipCounter = 0;
     counter++;
     messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
     var counterMessage = sprintfJS.sprintf("%04d", counter);
@@ -102,9 +104,9 @@ app.get('/call-layers', (request, response) => {
 
     if ( typeof username == 'undefined') {
       username = "-";
+    } else { 
+      console.log("Username : ", username);
     }
-
-    console.log("Username : ", username);
 
     if (nextServiceClusterIP.length > 0) {
       var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
