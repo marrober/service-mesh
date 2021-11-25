@@ -1,8 +1,8 @@
-cd 08-retries
-oc apply -f layer1.yaml                     
-oc apply -f layer2-A.yaml
-oc apply -f layer2-B.yaml
-oc apply -f destination-rule-virtual-service-layer1.yaml    
-oc apply -f destination-rule-virtual-service-layer2-A.yaml  
-oc apply -f destination-rule-virtual-service-layer2-B.yaml  
+cd 01-simple-virtual-service
+oc apply -f layer1.yaml
+oc apply -f layer2.yaml 
+oc apply -f virtual-service-layer2.yaml
+cd ../08-retries
+oc apply -f destination-rule-layer2.yaml    
+oc apply -f virtual-service-layer2.yaml  
 cd ..
