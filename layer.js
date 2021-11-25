@@ -90,7 +90,7 @@ app.get('/', (request, response) => {
 app.get('/call-layers', (request, response) => {
   if ((skipCallLayersResponses) && (getRandomIndex(10) > 5)) {
     console.log("sending a 503");
-    response.code = 503;
+    response.status(503);
     response.send("fail");
   } else {
     counter++;
@@ -212,7 +212,9 @@ app.get('/get-json', (request, response) => {
 app.get('/skip', (request, response) => {
   skipCallLayersResponses = 1;
   console.log("skipping some calls to /call-layers");
-  response.send("skipping some calls to /call-layers");
+  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
+  console.log(messageText);
+  response.send("skipping some calls to /call-layers for : " +  "[" + ip.address() + "]");
 });
 
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
