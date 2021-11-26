@@ -1,61 +1,45 @@
-commands:
-- exec:
-    commandLine: /opt/odo/bin/s2i-setup && /opt/odo/bin/assemble-and-restart
-    component: s2i-builder
-    group:
-      isDefault: true
-      kind: build
-  id: s2i-assemble
-- exec:
-    commandLine: /opt/odo/bin/run
-    component: s2i-builder
-    group:
-      isDefault: true
-      kind: run
-  id: s2i-run
-- exec:
-    commandLine: /opt/odo/bin/run
-    component: s2i-builder
-    group:
-      isDefault: true
-      kind: debug
-  id: s2i-debug
-components:
-- container:
-    endpoints:
-    - name: http-8080
-      targetPort: 8080
-    - exposure: public
-      name: node-app-01-8080
-      path: /
-      protocol: http
-      targetPort: 8080
-    env:
-    - name: DEBUG_PORT
-      value: "5858"
-    - name: ODO_S2I_SCRIPTS_URL
-      value: /usr/libexec/s2i
-    - name: ODO_S2I_SCRIPTS_PROTOCOL
-      value: image://
-    - name: ODO_S2I_SRC_BIN_PATH
-      value: /tmp
-    - name: ODO_S2I_DEPLOYMENT_DIR
-      value: /opt/app-root/src
-    - name: ODO_S2I_WORKING_DIR
-      value: /opt/app-root/src
-    - name: ODO_S2I_BUILDER_IMG
-      value: ubi8/nodejs-14
-    - name: ODO_SRC_BACKUP_DIR
-      value: /opt/app-root/src-backup
-    - name: ODO_S2I_CONVERTED_DEVFILE
-      value: "true"
-    image: registry.redhat.io/ubi8/nodejs-10:latest
-    mountSources: true
-    sourceMapping: /tmp/projects
-  name: s2i-builder
+apiVersion: 1.0.0
 metadata:
-  language: nodejs
-  name: node-app-01
-  projectType: nodejs
-  version: 1.0.0
-schemaVersion: 2.0.0
+  name: nodejs-io6it
+projects:
+  - name: nodejs
+    source:
+      location: 'git@github.com:marrober/simpleRest.git'
+      type: git
+components:
+  - id: vscode/typescript-language-features/latest
+    type: chePlugin
+  - id: ms-vscode/node-debug2/latest
+    type: chePlugin
+  - mountSources: true
+    endpoints:
+      - name: nodejs
+        port: 8080
+    memoryLimit: 512Mi
+    type: dockerimage
+    alias: nodejs
+    image: 'registry.redhat.io/codeready-workspaces/plugin-java8-rhel8@sha256:1c4faa2dae80c373f606f542ca841f991d1dfa27979006500aca85e3c2999d2d'
+  - mountSources: true
+    command:
+      - tail
+    args:
+      - '-f'
+      - /dev/null
+    memoryLimit: 1536M
+    type: dockerimage
+    alias: devex
+    image: 'quay.io/marrober/devex-terminal-4@sha256:83cc15c3c1ccafc25123af23e3348a5945a054287a45f6c4e0cd5426cd3457b7'
+    memoryRequest: 256M
+commands:
+  - name: 1. Run the app
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/nodejs/source'
+        type: exec
+        command: npm install; nodemon simpleRest.js
+        component: nodejs
+  - name: 2. Download dependencies
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/nodejs/source'
+        type: exec
+        command: npm install
+        component: nodejs
