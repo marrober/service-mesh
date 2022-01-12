@@ -211,12 +211,20 @@ app.get('/get-json', (request, response) => {
   response.send(messageText);
 });
 
-app.get('/skip', (request, response) => {
+app.get('/skip-on', (request, response) => {
   skipCallLayersResponses = 1;
   console.log("skipping some calls to /call-layers");
   messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
   console.log(messageText);
   response.send("skipping some calls to /call-layers for : " +  "[" + ip.address() + "]");
+});
+
+app.get('/skip-off', (request, response) => {
+  skipCallLayersResponses = 0;
+  console.log("skipping calls to /call-layers switched off");
+  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
+  console.log(messageText);
+  response.send("skipping calls to /call-layers switched off : " +  "[" + ip.address() + "]");
 });
 
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
