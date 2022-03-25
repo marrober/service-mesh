@@ -12,7 +12,11 @@ spec:
     - uri:
         exact: /get-info     
     - uri:
-        exact: /get-json              
+        exact: /get-json   
+    - uri:
+        exact: /skip-on     
+    - uri:
+        exact: /skip-off             
     - uri:
         exact: /
     route:

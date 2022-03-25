@@ -1,4 +1,4 @@
-cd 06-fault-injection
+cd 08-fault-injection
 oc apply -f layer1.yaml                     
 oc apply -f layer2-A.yaml
 oc apply -f layer2-B.yaml
