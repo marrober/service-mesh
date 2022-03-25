@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: get-and-push-image-pipeline-
+spec:
+  pipelineRef: 
+    name: get-and-push-image   
+  params: 
+    - name: STORAGE_DRIVER
+      value: vfs      
+    - name: quay-io-account
+      value: "marrober"
+    - name: quay-io-repository
+      value: "layers"   
+    - name: quay-io-image-tag-name
+      value: "latest"   
+    - name: image-stream-location
+      value: "image-registry.openshift-image-registry.svc:5000/service-mesh-01/layers:latest" 
+  workspaces:
+  - name: files
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi        
