@@ -1,3 +1,156 @@
-# layers
+# Service Mesh Demonstration
+
+## Initial setup
+
+Execute the script 
+```
+./01-simple-virtual-service.sh
+```
+
+This creates the initial setup of layer1, layer2-v1 and layer2-v2 deployments together with simple gateway and virtual services.
+
+The end of the script will report the istio ingress gateway URL. Export this to an environment variable called GATEWAY for example :
+
+```
+export GATEWAY=istio-ingressgateway-istio-system.apps.cluster-fzv22.fzv22.sandbox487.opentlc.com/call-layers
+```
+
+Note that the project created is called service-mesh-01. This can be changed by editing the script 01-simple-virtual-service.sh
+
+## Sending traffic
+
+Use the loop.sh script to send traffic to the application. Repeat this if required while showing kiali visualisation of traffic.
+
+## Traffic Control
+
+To distribute the traffic 80% to version 1 of layer 2 and 20% to version 2 of layer to execute the script :
+```
+./02-traffic-control.sh
+```
+
+This will create a destination rule and modify the virtual service. Repeat the loop.sh command to send traffic to the application and observe the result in the command window (most traffic going to version 1) and also show the traffic distribution in Kiali - switch on the traffic distribution. Again, this may need the loop to be repeated to display the correct distribution in Kiali.
+
+## Header based routing
+
+to enable header based routing execute the script :
+```
+./03-header-based-routing.sh
+```
+
+Shown the virtual service in the location 03-header-based-routing/virtual-service-layer2.yaml which requires the header 'username: mark' to get to version 1. Show the script in the location : 03-header-based-routing/loop-username.sh, to explain the header that will be sent to the application.
+
+Execute the command :
+```
+03-header-based-routing/loop-username.sh mark
+```
+
+Observe version 1 is the only application responding.
+
+Execute the command :
+```
+03-header-based-routing/loop-username.sh bill
+```
+
+Observe version 2 is the only application responding.
+
+## Mutual TLS
+
+### Setup phase
+
+Before configuring mTLS show that an unencrypted response can be obtained from layer2 of the application. create an ordinary OpenShift route to the layer2 service using the script below :
+
+```
+04-mtls/before-mtls.sh
+```
+
+The above command will display the curl command required to get a json response from the application. It will also execute the curl command once to get a block of unencrypted json data from the application. This proves that the application does not have secure communications.
+
+### Switch on mTLS
+
+To enable mTLS use the script :
+
+```
+./04-mtls-on.sh
+```
+
+Show the mTLS objects in the istio config view of Kiali. Repeat the curl command to show that the traffic is not returned in an unencrypted manner. Repeat the loop.sh script to show that the application still functions as required.
+
+### Switch off mTLS
+
+To disable mTLS use the script :
+
+```
+./04-mtls-off.sh
+```
+
+Repeat the curl command above to show that traffic is no longer encrypted.
+
+## Timeout
+
+To show the use of a timeout within the service mesh execute the command : 
+
+```
+./05-timeout.sh
+```
+
+The above will create additional deployments, destination rules and virtual services.
+
+Us the loop.sh script to show that there are now layers2 a and b and separate instances of each of these microservices.
+
+Show the virtual services in the istio config view to illustrate the timeouts.
+
+To show the use of the timeout execute the command :
+
+```
+./05-timeout/loop-sleep-900.sh
+```
+
+The above will be successful since the delay introduced by the application is 900ms which is less than the timeout of 1 second.
+
+Execute the commmand :
+
+```
+./05-timeout/loop-sleep-1100.sh
+```
+
+This will introduce a delay of 1100ms which is greater than the timeout for service 2-a and communication failures will be seen.
+
+## Retries
+
+To demonstrate the use of retries it is necessary to run the following preparation script :
+
+```
+./06-retries-prep.sh
+```
+
+This command will remove some of the prior configuration and will display a route for the layer2 service to which a curl command can be sent to tell the application to ignore incoming requests 4 out of 5 times. The curl command to switch to skipping requests is (example) :
+
+```
+curl http://layer2-service-mesh-01.apps.cluster-fzv22.fzv22.sandbox487.opentlc.com/skip-on
+```
+
+Show the application log for the pod for layer2-v1 which indicates that requests will be ignored.
+
+Use the loop.sh script to send requests and observe the failures.
+
+Enable the return capability of service mesh using the script below:
+
+```
+./06-retries-on.sh
+```
+
+Show the virtual service for layer2 with the retry configuration.
+
+Use the loop.sh script to send requests and observe the success of all calls.
+
+### Improve the application
+
+To instruct the application to behave more reliably execute the command :
+
+```
+curl http://layer2-service-mesh-01.apps.cluster-fzv22.fzv22.sandbox487.opentlc.com/skip-on
+```
+
+> Note that you should use your URL discovered previously.
 
 
