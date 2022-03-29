@@ -148,7 +148,7 @@ Use the loop.sh script to send requests and observe the success of all calls.
 To instruct the application to behave more reliably execute the command :
 
 ```
-curl http://layer2-service-mesh-01.apps.cluster-fzv22.fzv22.sandbox487.opentlc.com/skip-on
+curl http://layer2-service-mesh-01.apps.cluster-fzv22.fzv22.sandbox487.opentlc.com/skip-off
 ```
 
 > Note that you should use your URL discovered previously.

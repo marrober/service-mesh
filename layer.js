@@ -89,7 +89,7 @@ app.get('/', (request, response) => {
 });
 
 app.get('/call-layers', (request, response) => {
-  if ((skipCallLayersResponses) && (skipCounter++ < 5)) {
+  if ((skipCallLayersResponses) && (skipCounter++ < 15)) {
     console.log("sending a 503 - " + skipCounter);
     response.status(503);
     response.send("fail");
