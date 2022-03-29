@@ -15,7 +15,7 @@ spec:
     - name: quay-io-image-tag-name
       value: "latest"   
     - name: image-stream-location
-      value: "image-registry.openshift-image-registry.svc:5000/service-mesh-01/layers:latest" 
+      value: "image-registry.openshift-image-registry.svc:5000/service-mesh-01/service-mesh-git:latest" 
   workspaces:
   - name: files
     volumeClaimTemplate:

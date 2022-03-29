@@ -153,4 +153,36 @@ curl http://layer2-service-mesh-01.apps.cluster-fzv22.fzv22.sandbox487.opentlc.c
 
 > Note that you should use your URL discovered previously.
 
+### Remove retry
+
+Remove the retry configuration by executing the script :
+
+```
+./06-retries-off.sh
+```
+
+## Fault delay
+
+Apply the fault delay configuration with the script :
+
+```
+ ./07-fault-delay.sh
+```
+
+Show the configuration of virtual service 2-a in the istio configuration section.
+
+Use the loop.sh script to send traffic to the application. Show the trace view in the kiali visualisation and show that version 2-b has good performance with traces showing very low transaction times of 2 - 3 ms. Show that version 2-a has some transactions taking 2 seconds. Show the traces in Jaeger too.
+
+## Fault injection
+
+Apply the fault delay configuration with the script :
+
+```
+ ./08-fault-injection.sh
+```
+
+Show the configuration ov virtual service 2-a in the istio configuration section.
+
+Use the loop.sh script to send traffic to the application. show that some responses are a failure.
+
 

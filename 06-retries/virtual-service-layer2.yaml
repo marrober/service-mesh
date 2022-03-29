@@ -26,5 +26,5 @@ spec:
           number: 8080
         subset: v1          
     retries:
-      attempts: 10
+      attempts: 15
       perTryTimeout: 5s
