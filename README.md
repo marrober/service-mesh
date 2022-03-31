@@ -2,12 +2,14 @@
 
 ## Installation
 
-To install the operators required for service mesh cluster administration permission is required. The following operators are requried :
+To install the operators for service mesh cluster administration permission is required. The following operators are installed for service mesh capability :
 
 - Elastic search
 - Kiali
 - Red Hat OpenShift distributed tracing platform (Jaeger)
 - Red Hat OpenShift Service Mesh
+
+Once the operators are installed create a namespace to hold the control plane (generally istio-system) and then create an instance of the service mesh control plane within that namespace.
 
 ## Demonstration asset initial setup
 
