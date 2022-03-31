@@ -1,8 +1,17 @@
 # Service Mesh Demonstration
 
-## Initial setup
+## Installation
 
-Execute the script 
+To install the operators required for service mesh cluster administration permission is required. The following operators are requried :
+
+- Elastic search
+- Kiali
+- Red Hat OpenShift distributed tracing platform (Jaeger)
+- Red Hat OpenShift Service Mesh
+
+## Demonstration asset initial setup
+
+Execute the script
 ```
 ./01-simple-virtual-service.sh
 ```
@@ -87,7 +96,7 @@ Repeat the curl command above to show that traffic is no longer encrypted.
 
 ## Timeout
 
-To show the use of a timeout within the service mesh execute the command : 
+To show the use of a timeout within the service mesh execute the command :
 
 ```
 ./05-timeout.sh
@@ -184,5 +193,3 @@ Apply the fault delay configuration with the script :
 Show the configuration ov virtual service 2-a in the istio configuration section.
 
 Use the loop.sh script to send traffic to the application. show that some responses are a failure.
-
-
