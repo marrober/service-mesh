@@ -30,7 +30,7 @@ Note that the project created is called service-mesh-01. This can be changed by 
 
 ## Sending traffic
 
-Use the loop.sh script to send traffic to the application. Repeat this if required while showing kiali visualisation of traffic.
+Use the loop.sh script to send traffic to the application. Repeat this if required while showing kiali visualisation of traffic. When viewing traffic in kiali use the 'hide' capability with the text : "name=term". This will stop the terminal pod from appearing in Kiali.
 
 ## Traffic Control
 

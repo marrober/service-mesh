@@ -22,10 +22,9 @@ spec:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-      - env:
+      - name: layer2
         image: quay.io/marrober/layers:latest
         imagePullPolicy: Always
-        name: layer2
         ports:
         - containerPort: 8080
           name: http
@@ -35,6 +34,14 @@ spec:
             value: layer2
           - name: VERSION_ID
             value: v1
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: 
+            - ALL
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -60,10 +67,9 @@ spec:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-      - env:
+      - name: layer2
         image: quay.io/marrober/layers:latest
-        imagePullPolicy: Always
-        name: layer2
+        imagePullPolicy: Always   
         ports:
         - containerPort: 8080
           name: http
@@ -73,6 +79,14 @@ spec:
             value: layer2
           - name: VERSION_ID
             value: v2
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: 
+            - ALL
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
 ---
 apiVersion: v1
 kind: Service

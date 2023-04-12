@@ -3,3 +3,4 @@ service-mesh/istio-master/*
 .odo/odo-file-index.json
 
 .DS_Store
+.odo
