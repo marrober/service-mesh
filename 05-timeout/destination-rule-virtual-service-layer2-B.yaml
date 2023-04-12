@@ -20,15 +20,9 @@ spec:
   hosts:
   - layer2-b
   http:
-  - match:
+  - match:  
     - uri:
-        prefix: /call-layers   
-    - uri:
-        prefix: /call-layers-sleep           
-    - uri:
-        exact: /get-info        
-    - uri:
-        exact: /
+        prefix: /
     route:
     - destination:
         host: layer2-b

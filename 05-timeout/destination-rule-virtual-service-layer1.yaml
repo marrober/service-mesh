@@ -19,15 +19,9 @@ spec:
   gateways:
   - layer1-gateway
   http:
-  - match:
+  - match:   
     - uri:
-        exact: /call-layers
-    - uri:
-        prefix: /call-layers-sleep        
-    - uri:
-        exact: /get-info        
-    - uri:
-        exact: /
+        prefix: /
     route:
     - destination:
         host: layer1 

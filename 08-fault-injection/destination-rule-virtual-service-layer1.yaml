@@ -21,9 +21,7 @@ spec:
   http:
   - match:
     - uri:
-        exact: /call-layers
-    - uri:
-        prefix: /call-layers-sleep        
+        prefix: /call-layers        
     - uri:
         exact: /get-info        
     - uri:

@@ -24,9 +24,7 @@ spec:
           value: 50    
     match:
     - uri:
-        prefix: /call-layers
-    - uri:
-        prefix: /call-layers-sleep         
+        prefix: /call-layers    
     - uri:
         exact: /get-info        
     - uri:
