@@ -68,13 +68,14 @@ Observe version 2 is the only application responding.
 
 ### Setup phase
 
-Before configuring mTLS show that an unencrypted response can be obtained from layer2 of the application. create an ordinary OpenShift route to the layer2 service using the script below :
+Before configuring mTLS show that an unencrypted response can be obtained from layer2 of the application. Create a terminal application within the same namespace using the terminal container image : quay.io/marrober/devex-terminal-4:full-terminal-1.2. Within the terminal, login to the OpenShift cluster as the correct user and then issue the commands :
 
 ```
-04-mtls/before-mtls.sh
+oc project service-mesh
+curl -s layer2.service-mesh-01.svc.cluster.local:8080/get-json | jq .
 ```
 
-The above command will display the curl command required to get a json response from the application. It will also execute the curl command once to get a block of unencrypted json data from the application. This proves that the application does not have secure communications.
+The above command will get a block of unencrypted json data from the application. This proves that the application does not have secure communications.
 
 ### Switch on mTLS
 
@@ -137,7 +138,7 @@ To demonstrate the use of retries it is necessary to run the following preparati
 This command will remove some of the prior configuration and will display a route for the layer2 service to which a curl command can be sent to tell the application to ignore incoming requests 4 out of 5 times. The curl command to switch to skipping requests is (example) :
 
 ```
-curl http://layer2-service-mesh-01.apps.cluster-fzv22.fzv22.sandbox487.opentlc.com/skip-on
+curl layer2.service-mesh-01.svc.cluster.local:8080/skip-on
 ```
 
 Show the application log for the pod for layer2-v1 which indicates that requests will be ignored.
@@ -159,7 +160,7 @@ Use the loop.sh script to send requests and observe the success of all calls.
 To instruct the application to behave more reliably execute the command :
 
 ```
-curl http://layer2-service-mesh-01.apps.cluster-fzv22.fzv22.sandbox487.opentlc.com/skip-off
+curl layer2.service-mesh-01.svc.cluster.local:8080/skip-off
 ```
 
 > Note that you should use your URL discovered previously.
