@@ -99,7 +99,34 @@ app.get('/call-layers', (request, response) => {
     messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
     var counterMessage = sprintfJS.sprintf("%04d", counter);
     console.log("phase: /call-layers", messageText);
-    console.log(JSON.stringify(request.headers));
+    var requestHeaders = request.headers
+
+    var x_b3_traceid = requestHeaders['x-b3-traceid'];
+    var x_b3_spanid = requestHeaders['x-b3-spanid'];
+    var x_b3_parentspanid = requestHeaders['x-b3-parentspanid'];
+    var x_b3_sampled = requestHeaders['x-b3-sampled'];
+    var x_b3_flags = requestHeaders['x-b3-flags'];
+    var x_request_id = requestHeaders['x-request-id'];
+
+    if(x_request_id) { 
+      console.log("x-request-id : " + x_request_id);
+    }
+    if(x_b3_flags) { 
+      console.log("x-b3-flags : " + x_b3_flags);
+    }
+    if(x_b3_sampled) { 
+      console.log("x-b3-sampled : " + x_b3_sampled);
+    }
+    if(x_b3_parentspanid) { 
+      console.log("x-b3-parentspanid : " + x_b3_parentspanid);
+    }
+    if(x_b3_spanid) { 
+      console.log("x-b3-spanid : " + x_b3_spanid);
+    }
+    if(x_b3_traceid) { 
+      console.log("x-b3-traceid : " + x_b3_traceid);
+    }
+
     var username = "";
     username = request.headers['username'];
 
@@ -119,7 +146,13 @@ app.get('/call-layers', (request, response) => {
         method: 'GET',
         headers: {
             'username': username,
-            'Content-Type':'application/x-www-form-urlencoded'
+            'Content-Type':'application/x-www-form-urlencoded',
+            'x-b3-traceid': x_b3_traceid,
+            'x-b3-spanid' : x_b3_spanid,
+            'x-b3-parentspanid': x_b3_parentspanid,
+            'x-b3-sampled': x_b3_sampled,
+            'x-b3-flags': x_b3_flags,
+            'x-request-id': x_request_id
         },
       };
 
