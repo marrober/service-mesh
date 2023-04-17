@@ -35,7 +35,7 @@ spec:
           - name: VERSION_ID
             value: v1
           - name: NEXT_LAYER_NAME
-            value: layer-3
+            value: layer3
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -81,6 +81,8 @@ spec:
             value: layer2
           - name: VERSION_ID
             value: v2
+          - name: NEXT_LAYER_NAME
+            value: layer3
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
