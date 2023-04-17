@@ -1,10 +1,10 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: layer-c
+  name: layer4
 spec:
   hosts:
-  - layer-c
+  - layer4
   http:
   - match:
     - uri:
@@ -17,6 +17,6 @@ spec:
         exact: /
     route:
     - destination:
-        host: layer-c
+        host: layer4
         port:
           number: 8080

@@ -135,6 +135,25 @@ app.get('/call-layers', (request, response) => {
     } else { 
       console.log("Username : ", username);
     }
+  
+    options = {
+      host: nextServiceClusterIPToUse,
+      port: nextServicePort,
+      path: "/call-layers",
+      method: 'GET',
+      headers: {
+          ...((username != undefined) && { 'username': username }),
+          'Content-Type':'application/x-www-form-urlencoded',
+          ...((x_b3_traceid != undefined) && { 'x-b3-traceid': x_b3_traceid}),
+          ...((x_b3_spanid != undefined) && { 'x-b3-spanid' : x_b3_spanid}),
+          ...((x_b3_parentspanid != undefined) && { 'x-b3-parentspanid': x_b3_parentspanid}),
+          ...((x_b3_sampled != undefined) && { 'x-b3-sampled': x_b3_sampled}),
+          ...((x_b3_flags != undefined) && { 'x-b3-flags': x_b3_flags}),
+          ...((x_request_id != undefined) && { 'x-request-id': x_request_id})
+      },
+    };
+
+    console.log(options);
 
     if (nextServiceClusterIP.length > 0) {
       var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
@@ -145,14 +164,14 @@ app.get('/call-layers', (request, response) => {
         path: "/call-layers",
         method: 'GET',
         headers: {
-            'username': username,
-            'Content-Type':'application/x-www-form-urlencoded',
-            'x-b3-traceid': x_b3_traceid,
-            'x-b3-spanid' : x_b3_spanid,
-            'x-b3-parentspanid': x_b3_parentspanid,
-            'x-b3-sampled': x_b3_sampled,
-            'x-b3-flags': x_b3_flags,
-            'x-request-id': x_request_id
+          ...((username != undefined) && { 'username': username }),
+          'Content-Type':'application/x-www-form-urlencoded',
+          ...((x_b3_traceid != undefined) && { 'x-b3-traceid': x_b3_traceid}),
+          ...((x_b3_spanid != undefined) && { 'x-b3-spanid' : x_b3_spanid}),
+          ...((x_b3_parentspanid != undefined) && { 'x-b3-parentspanid': x_b3_parentspanid}),
+          ...((x_b3_sampled != undefined) && { 'x-b3-sampled': x_b3_sampled}),
+          ...((x_b3_flags != undefined) && { 'x-b3-flags': x_b3_flags}),
+          ...((x_request_id != undefined) && { 'x-request-id': x_request_id})
         },
       };
 

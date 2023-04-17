@@ -2,28 +2,28 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: layer-a
+    app: layer5
     version: v1
     app.kubernetes.io/part-of: layers
     app.openshift.io/runtime: nodejs
-  name: layer-a-v1
+  name: layer5-v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: layer-a
+      app: layer5
       version: v1
   template:
     metadata:
       labels:
-        app: layer-a
+        app: layer5
         version: v1
       annotations:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-      - name: layer-a
-        image: quay.io/marrober/layers:26
+      - name: layer5
+        image: quay.io/marrober/layers:27
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -31,11 +31,11 @@ spec:
           protocol: TCP
         env:
           - name: THIS_LAYER_NAME
-            value: layer-a
+            value: layer5
           - name: VERSION_ID
             value: v1
           - name: NEXT_LAYER_NAME
-            value: layer-b
+            value: layer6
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -48,12 +48,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: layer-a
+  name: layer5
   labels:
-    app: layer-a
+    app: layer5
 spec:
   ports:
   - name: http
     port: 8080
   selector:
-    app: layer-a            
+    app: layer5            
