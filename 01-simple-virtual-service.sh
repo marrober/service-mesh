@@ -9,4 +9,4 @@ oc create --save-config -f layer2.yaml
 oc create --save-config -f virtual-service-layer2.yaml 
 echo $(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}{"/call-layers"}')
 cd ..
-oc new-app --name="term" --image=quay.io/marrober/devex-terminal-4:full-terminal-1.2
+oc new-app --name="term" --docker-image=quay.io/marrober/devex-terminal-4:full-terminal-1.2
