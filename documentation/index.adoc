@@ -248,5 +248,9 @@ To show extensive tracing across layers of the application execute the script :
 ./09-trace-layers.sh
 ```
 
+Demonstrate the impact on Kiali visualisation using the loop :
 
+```
+./loop.sh
+```
 
