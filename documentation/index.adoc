@@ -1,0 +1,252 @@
+# Service Mesh Demonstration
+
+## Installation
+
+To install the operators for service mesh cluster administration permission is required. The following operators are installed for service mesh capability :
+
+- Elastic search
+- Kiali
+- Red Hat OpenShift distributed tracing platform (Jaeger)
+- Red Hat OpenShift Service Mesh
+
+Once the operators are installed create a namespace to hold the control plane (generally istio-system) and then create an instance of the service mesh control plane within that namespace.
+
+## Demonstration asset initial setup
+
+Execute the script
+```
+./01-simple-virtual-service.sh
+```
+
+This creates the initial setup of layer1, layer2-v1 and layer2-v2 deployments together with simple gateway and virtual services.
+
+The end of the script will report the istio ingress gateway URL. Export this to an environment variable called GATEWAY for example :
+
+```
+export GATEWAY=istio-ingressgateway-istio-system.apps.cluster-fzv22.fzv22.sandbox487.opentlc.com/call-layers
+```
+
+Note that the project created is called service-mesh-01. This can be changed by editing the script 01-simple-virtual-service.sh
+
+## Sending traffic
+
+Use the loop.sh script to send traffic to the application. 
+
+Execute the script
+```
+./loop.sh
+```
+
+Repeat this if required while showing kiali visualisation of traffic. When viewing traffic in kiali use the 'hide' capability with the text : "name=term". This will stop the terminal pod from appearing in Kiali.
+
+## Traffic Control
+
+To distribute the traffic 80% to version 1 of layer 2 and 20% to version 2 of layer to execute the script :
+
+```
+./02-traffic-control.sh
+```
+
+This will create a destination rule and modify the virtual service. Repeat the loop.sh command to send traffic to the application and observe the result in the command window (most traffic going to version 1) and also show the traffic distribution in Kiali - switch on the traffic distribution. Again, this may need the loop to be repeated to display the correct distribution in Kiali.
+
+Repeat the loop script to send traffic
+
+```
+./loop.sh
+```
+
+
+## Header based routing
+
+to enable header based routing execute the script :
+```
+./03-header-based-routing.sh
+```
+
+Shown the virtual service in the location 03-header-based-routing/virtual-service-layer2.yaml which requires the header 'username: mark' to get to version 1. Show the script in the location : 03-header-based-routing/loop-username.sh, to explain the header that will be sent to the application.
+
+Execute the command :
+```
+03-header-based-routing/loop-username.sh mark
+```
+
+Observe version 1 is the only application responding.
+
+Execute the command :
+```
+03-header-based-routing/loop-username.sh bill
+```
+
+Observe version 2 is the only application responding.
+
+## Mutual TLS
+
+### Setup phase
+
+Before configuring mTLS show that an unencrypted response can be obtained from layer2 of the application. Create a terminal application within the same namespace using the terminal container image : quay.io/marrober/devex-terminal-4:full-terminal-1.2. 
+
+[IMPORTANT]
+====
+Within the terminal, login to the OpenShift cluster as the correct user and then issue the commands :
+
+```
+curl -s layer2.service-mesh-01.svc.cluster.local:8080/get-json | jq .
+```
+
+The above command will get a block of unencrypted json data from the application. This proves that the application does not have secure communications.
+====
+
+### Switch on mTLS
+
+To enable mTLS use the script :
+
+```
+./04-mtls-on.sh
+```
+
+Show the mTLS objects in the istio config view of Kiali. Repeat the curl command to show that the traffic is not returned in an unencrypted manner. Repeat the loop.sh script to show that the application still functions as required.
+
+### Switch off mTLS
+
+To disable mTLS use the script :
+
+```
+./04-mtls-off.sh
+```
+
+Repeat the curl command above to show that traffic is no longer encrypted.
+
+## Timeout
+
+To show the use of a timeout within the service mesh execute the command :
+
+```
+./05-timeout.sh
+```
+
+The above will create additional deployments, destination rules and virtual services.
+
+Use the loop.sh script to show that there are now layers2 a and b and separate instances of each of these microservices.
+
+
+
+Show the virtual services in the istio config view to illustrate the timeouts.
+
+To show the use of the timeout execute the command :
+
+```
+./05-timeout/loop-sleep-900.sh
+```
+
+The above will be successful since the delay introduced by the application is 900ms which is less than the timeout of 1 second.
+
+Execute the commmand :
+
+```
+./05-timeout/loop-sleep-1100.sh
+```
+
+This will introduce a delay of 1100ms which is greater than the timeout for service 2-a and communication failures will be seen.
+
+## Retries
+
+To demonstrate the use of retries it is necessary to run the following preparation script :
+
+```
+./06-retries-prep.sh
+```
+
+This command will remove some of the prior configuration and will display a route for the layer2 service to which a curl command can be sent to tell the application to ignore incoming requests 4 out of 5 times. 
+
+[IMPORTANT]
+====
+Within the terminal, login to the OpenShift cluster as the correct user and then issue the commands :
+
+```
+curl layer2.service-mesh-01.svc.cluster.local:8080/skip-on
+```
+====
+
+Use the loop.sh script to send requests and observe the failures.
+
+```
+./loop.sh
+```
+
+Enable the retry capability of service mesh using the script below:
+
+```
+./06-retries-on.sh
+```
+
+Show the *virtual service for layer2* with the retry configuration.
+
+Use the loop.sh script to send requests and observe the success of all calls.
+
+
+```
+./loop.sh
+```
+
+### Improve the application
+
+[IMPORTANT]
+====
+Within the terminal, instruct the application to behave more reliably using the command :
+
+```
+curl layer2.service-mesh-01.svc.cluster.local:8080/skip-off
+```
+====
+
+### Remove retry
+
+Remove the retry configuration by executing the script :
+
+```
+./06-retries-off.sh
+```
+
+## Fault delay
+
+Apply the fault delay configuration with the script :
+
+```
+ ./07-fault-delay.sh
+```
+
+Show the configuration of *virtual service 2-a* in the istio configuration section.
+
+```
+./loop.sh
+```
+
+Use the loop.sh script to send traffic to the application. Show the trace view in the kiali visualisation and show that *version 2-b* has good performance with traces showing very low transaction times of 2 - 3 ms. Show that *version 2-a* has some transactions taking 2 seconds. Show the traces in Jaeger too.
+
+## Fault injection
+
+Apply the fault delay configuration with the script :
+
+```
+ ./08-fault-injection.sh
+```
+
+Show the configuration ov *virtual service 2-a* in the istio configuration section.
+
+Use the loop.sh script to send traffic to the application. show that some responses are a failure.
+
+```
+./loop.sh
+```
+
+## Trace layers
+
+To show extensive tracing across layers of the application execute the script :
+
+
+```
+./09-trace-layers.sh
+```
+
+
+
