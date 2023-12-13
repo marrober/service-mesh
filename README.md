@@ -68,7 +68,7 @@ Observe version 2 is the only application responding.
 
 ### Setup phase
 
-Before configuring mTLS show that an unencrypted response can be obtained from layer2 of the application. Create a terminal application within the same namespace using the terminal container image : quay.io/marrober/devex-terminal-4:full-terminal-1.2. *Within the terminal", login to the OpenShift cluster as the correct user and then issue the commands :
+Before configuring mTLS show that an unencrypted response can be obtained from layer2 of the application. Create a terminal application within the same namespace using the terminal container image : quay.io/marrober/devex-terminal-4:full-terminal-1.2. *Within the terminal*, login to the OpenShift cluster as the correct user and then issue the commands :
 
 ```
 oc project service-mesh-01
