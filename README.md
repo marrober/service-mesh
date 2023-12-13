@@ -196,3 +196,21 @@ Apply the fault delay configuration with the script :
 Show the configuration ov virtual service 2-a in the istio configuration section.
 
 Use the loop.sh script to send traffic to the application. show that some responses are a failure.
+
+## Application tracing
+
+Create the resources for the application tracing :
+
+```
+ ./09-trace-layers.sh
+```
+
+Use the loop.sh script to send traffic to the application. Show the trace view in the kiali visualisation and show the traces in Jaeger too.
+
+## Cleanup
+
+Delete all resources :
+
+```
+ ./10-clean.sh
+```
