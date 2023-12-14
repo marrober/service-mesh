@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: layer1
+spec:
+  hosts:
+  - layer1
+  http:
+  - match:
+    - uri:
+        exact: /call-layers
+      method:
+        exact: get
+    route:
+    - destination:
+        host: layer1
+        port:
+          number: 8080
+        subset: v1
