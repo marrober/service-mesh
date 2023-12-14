@@ -205,6 +205,8 @@ Create the resources for the application tracing :
  ./09-trace-layers.sh
 ```
 
+
+
 Use the loop.sh script to send traffic to the application. Show the trace view in the kiali visualisation and show the traces in Jaeger too.
 
 ## Cleanup
@@ -212,5 +214,5 @@ Use the loop.sh script to send traffic to the application. Show the trace view i
 Delete all resources :
 
 ```
- ./10-clean.sh
+ ./11-clean.sh
 ```

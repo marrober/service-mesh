@@ -81,6 +81,12 @@ var options = {
 var ip = require("ip");
 var messageText = "";
 
+app.post('/', (request, response) => {
+  messageText = sprintfJS.sprintf("POST REQUEST");
+  console.log("phase: root", messageText);
+  response.send(messageText + "\n");
+});
+
 app.get('/', (request, response) => {
   counter++;
   messageText = sprintfJS.sprintf("this ip address %-15s  %04d", ip.address(), counter);
