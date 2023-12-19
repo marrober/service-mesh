@@ -8,9 +8,9 @@ spec:
   http:
   - match:
     - uri:
-        exact: /call-layers
+        exact: /
       method:
-        exact: get
+        exact: POST
     route:
     - destination:
         host: layer1
