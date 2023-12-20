@@ -64,6 +64,31 @@ Execute the command :
 
 Observe version 2 is the only application responding.
 
+## Http method based filtering
+
+to enable http method based filtering execute the script :
+```
+./04-http-method-filtering.sh
+```
+
+Get the base URL for the application :
+```
+echo $(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')
+```
+
+export the above to GATEWAY2
+
+Show the virtual service rule for 'layers'.
+
+Execute the curl commands to test the verbs.
+```
+curl $GATEWAY2 -X GET
+```
+
+```
+curl $GATEWAY2 -X POST
+```
+
 ## Mutual TLS
 
 ### Setup phase
@@ -82,7 +107,7 @@ The above command will get a block of unencrypted json data from the application
 To enable mTLS use the script :
 
 ```
-./04-mtls-on.sh
+./05-mtls-on.sh
 ```
 
 Show the mTLS objects in the istio config view of Kiali. Repeat the curl command to show that the traffic is not returned in an unencrypted manner. Repeat the loop.sh script to show that the application still functions as required.
@@ -92,7 +117,7 @@ Show the mTLS objects in the istio config view of Kiali. Repeat the curl command
 To disable mTLS use the script :
 
 ```
-./04-mtls-off.sh
+./05-mtls-off.sh
 ```
 
 Repeat the curl command above to show that traffic is no longer encrypted.
@@ -102,7 +127,7 @@ Repeat the curl command above to show that traffic is no longer encrypted.
 To show the use of a timeout within the service mesh execute the command :
 
 ```
-./05-timeout.sh
+./06-timeout.sh
 ```
 
 The above will create additional deployments, destination rules and virtual services.
@@ -114,7 +139,7 @@ Show the virtual services in the istio config view to illustrate the timeouts.
 To show the use of the timeout execute the command :
 
 ```
-./05-timeout/loop-sleep-900.sh
+./06-timeout/loop-sleep-900.sh
 ```
 
 The above will be successful since the delay introduced by the application is 900ms which is less than the timeout of 1 second.
@@ -122,7 +147,7 @@ The above will be successful since the delay introduced by the application is 90
 Execute the commmand :
 
 ```
-./05-timeout/loop-sleep-1100.sh
+./06-timeout/loop-sleep-1100.sh
 ```
 
 This will introduce a delay of 1100ms which is greater than the timeout for service 2-a and communication failures will be seen.
@@ -132,7 +157,7 @@ This will introduce a delay of 1100ms which is greater than the timeout for serv
 To demonstrate the use of retries it is necessary to run the following preparation script :
 
 ```
-./06-retries-prep.sh
+./07-retries-prep.sh
 ```
 
 This command will remove some of the prior configuration and will display a route for the layer2 service to which a curl command can be sent to tell the application to ignore incoming requests 4 out of 5 times. The curl command to switch to skipping requests is (example) :
@@ -148,7 +173,7 @@ Use the loop.sh script to send requests and observe the failures.
 Enable the return capability of service mesh using the script below:
 
 ```
-./06-retries-on.sh
+./07-retries-on.sh
 ```
 
 Show the virtual service for layer2 with the retry configuration.
@@ -170,7 +195,7 @@ curl layer2.service-mesh-01.svc.cluster.local:8080/skip-off
 Remove the retry configuration by executing the script :
 
 ```
-./06-retries-off.sh
+./07-retries-off.sh
 ```
 
 ## Fault delay
@@ -178,7 +203,7 @@ Remove the retry configuration by executing the script :
 Apply the fault delay configuration with the script :
 
 ```
- ./07-fault-delay.sh
+ ./08-fault-delay.sh
 ```
 
 Show the configuration of virtual service 2-a in the istio configuration section.
@@ -190,7 +215,7 @@ Use the loop.sh script to send traffic to the application. Show the trace view i
 Apply the fault delay configuration with the script :
 
 ```
- ./08-fault-injection.sh
+ ./09-fault-injection.sh
 ```
 
 Show the configuration ov virtual service 2-a in the istio configuration section.
@@ -202,10 +227,8 @@ Use the loop.sh script to send traffic to the application. show that some respon
 Create the resources for the application tracing :
 
 ```
- ./09-trace-layers.sh
+ ./10-trace-layers.sh
 ```
-
-
 
 Use the loop.sh script to send traffic to the application. Show the trace view in the kiali visualisation and show the traces in Jaeger too.
 
