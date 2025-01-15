@@ -1,4 +1,4 @@
-cd 09-trace-layers
+cd 10-trace-layers
 oc apply -f layer1.yaml
 oc apply -f layer2.yaml
 oc apply -f layer3.yaml
