@@ -8,7 +8,7 @@
     "start": "node ./layer.js"
   },
   "dependencies": {
-    "express": "4.18.2",
+    "express": "4.19.2",
     "get-json": "^1.0.1",
     "ip": "1.1.5",
     "json-log": "3.0.1",
