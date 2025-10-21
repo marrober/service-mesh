@@ -1,5 +1,6 @@
 oc new-project service-mesh-01
-oc create -f servicemeshmember.yaml
+oc label namespace service-mesh-01 istio-injection=enabled
+# oc create -f servicemeshmember.yaml
 sleep 20
 cd 01-simple-virtual-service
 oc create --save-config -f layer1.yaml
