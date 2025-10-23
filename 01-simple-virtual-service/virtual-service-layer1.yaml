@@ -15,8 +15,6 @@ spec:
         exact: /get-info       
     - uri:
         exact: /get-json                
-    - uri:
-        exact: /
     route:
     - destination:
         host: layer1 

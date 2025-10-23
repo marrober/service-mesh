@@ -14,11 +14,14 @@ const app = express();
 var serviceNames = process.env.NEXT_LAYER_NAME;
 var thisLayerName = process.env.THIS_LAYER_NAME;
 var ignoreDelays = process.env.IGNORE_DELAYS;
-var versionID = process.env.VERSION_ID;
+var versionID = "v1"; // process.env.VERSION_ID;
+var verbose = process.env.VERBOSE;
 var ignoreDelaysFlag = false;
 var skipCounter = 0;
 
 var skipCallLayersResponses = 0;
+
+var resultHash = {};
 
 if (typeof ignoreDelays != 'undefined') {
   if (ignoreDelays.toUpperCase() == "TRUE") {
@@ -98,7 +101,7 @@ app.get('/call-layers', (request, response) => {
     counter++;
     messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "]";
     var counterMessage = sprintfJS.sprintf("%04d", counter);
-    console.log("phase: /call-layers", messageText);
+    console.log("/call-layers", messageText);
     var requestHeaders = request.headers
 
     var x_b3_traceid = requestHeaders['x-b3-traceid'];
@@ -133,7 +136,9 @@ app.get('/call-layers', (request, response) => {
     if ( typeof username == 'undefined') {
       username = "-";
     } else { 
-      console.log("Username : ", username);
+      if (verbose == true) {
+        console.log("Username : ", username);
+      }
     }
   
     options = {
@@ -152,8 +157,9 @@ app.get('/call-layers', (request, response) => {
           ...((x_request_id != undefined) && { 'x-request-id': x_request_id})
       },
     };
-
-    console.log(options);
+    if (verbose == true) {
+      console.log(options);
+    }
 
     if (nextServiceClusterIP.length > 0) {
       var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
@@ -175,21 +181,37 @@ app.get('/call-layers', (request, response) => {
         },
       };
 
-      console.log(JSON.stringify(options.headers));
+      if (verbose == true) {
+        console.log(JSON.stringify(options.headers));
+      }
 
       sendNextRequest(function (valid, text, code ) {
         if (valid == true) {
           text = text.replace(/"/g,"");
+
+          // Get version identifier and name from the returned message 
+
+          let splitText = text.split(" ");
+
+          returnedPodName = splitText[0];
+
+          returnedPodVersion = splitText[1].replace(/\(/g,"");
+          returnedPodVersion = returnedPodVersion.replace(/\)/g,"");
+
+          recordResponses(returnedPodName, returnedPodVersion);
+
           messageText += " ----> " + text;
-          console.log("phase: status counter: " + counter + "  this_ip: " + ip.address() +" "  + messageText + " " + code);
+          if (verbose == true) {
+            console.log("status counter: " + counter + "  this_ip: " + ip.address() +" "  + messageText + " " + code);
+          }
           if (code != 200) {
             response.code = code;
           }
-          response.send(messageText);
+          response.send(messageText + "\n");
         }
       });
     } else {
-      response.send(messageText);
+      response.send(messageText + "\n");
     }
   }
 });
@@ -206,23 +228,31 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
   } else {
     thisSleepTime = sleepTime;
   }
-  console.log("phase: timing", "sleeping ... " + thisSleepTime);
+  if (verbose == true) {
+    console.log("phase: timing", "sleeping ... " + thisSleepTime);
+  }
   sleep(thisSleepTime).then(() => {
     messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] sleep (" + thisSleepTime + " ms)";
     var counterMessage = sprintfJS.sprintf("%04d", counter);
-    console.log("phase: run", messageText);
+    if (verbose == true) {
+      console.log("phase: run", messageText);
+    }
 
     if (nextServiceClusterIP.length > 0) {
       var nextServiceClusterIPToUse = nextServiceClusterIP[getRandomIndex(nextServiceClusterIP.length)];
       options.path = "/call-layers-sleep:" + sleepTime;
       options.host = nextServiceClusterIPToUse;
-      console.log("phase: run", "Sending next layer request for : " + nextServiceClusterIPToUse + " with delay of " + sleepTime +" ms");
+      if (verbose == true) {
+        console.log("phase: run", "Sending next layer request for : " + nextServiceClusterIPToUse + " with delay of " + sleepTime +" ms");
+      }
 
       sendNextRequest(function (valid, text, code) {
         if (valid == true) {
           text = text.replace(/"/g,"");
           messageText += " ----> " + text;
-          console.log("phase: status counter: " + counter + "this_ip: " + ip.address() +" "  + messageText + " " + code);
+          if (verbose == true) {
+            console.log("phase: status counter: " + counter + "this_ip: " + ip.address() +" "  + messageText + " " + code);
+          }
           if (code != 200) {
             response.code = code;
           }
@@ -237,7 +267,7 @@ app.get('/call-layers-sleep:sleepTime', (request, response) => {
 
 app.get('/get-info', (request, response) => {
   counter++;
-  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + " Build source : " + process.env.OPENSHIFT_BUILD_SOURCE + " GIT commit : " + process.env.OPENSHIFT_BUILD_COMMIT;
+  messageText = thisLayerName + " (" + versionID + ") " +  "[" + ip.address() + "] hostname : " + process.env.HOSTNAME + "\n";
   var counterMessage = sprintfJS.sprintf("%04d", counter);
   console.log("phase: run", messageText);
   response.send(messageText);
@@ -247,7 +277,7 @@ app.get('/get-json', (request, response) => {
  const data = {
     name: "Mark Roberts",
     company: "Red Hat",
-    title: "Senior solution architect"
+    title: "Principal solution architect"
   }
 
   const jsonStr = JSON.stringify(data);
@@ -280,9 +310,20 @@ app.get('/skip-off', (request, response) => {
   response.send("skipping calls to /call-layers switched off : " +  "[" + ip.address() + "]");
 });
 
+app.get('/get-results', (request, response) => {
+    messageText = "";
+    for (const key in resultHash) {
+      if (resultHash.hasOwnProperty(key)) {
+        console.log(`${key} : ${resultHash[key]}`);
+        messageText = messageText + `${key} : ${resultHash[key]}` + "\n";
+      }
+    }
+  
+    response.send(messageText);
+  
+    })
+    
 const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
-
-
 
 console.log("Listening on port " + port);
 app.listen(port, () => console.log("phase: setup", "Listening on port " + port));
@@ -290,14 +331,18 @@ app.listen(port, () => console.log("phase: setup", "Listening on port " + port))
 function sendNextRequest(cb) {
   var nextURL = "http://" + options.host + ":" + options.port + options.path;
   console.log("phase: run", "Sending message to next layer : " + nextURL);
-  console.log(JSON.stringify(options));
+  if (verbose == true) {
+    console.log(JSON.stringify(options));
+  }
 
   var request = http.request(options, (res) => {
     let dataResponse = '';
     res.on('data', (chunk) => {
       dataResponse += chunk;
       console.log("phase: run", "Got data back : " + dataResponse);
-      console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+      if (verbose == true) {
+        console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+      }  
     });
 
     res.on('end', () => {
@@ -321,4 +366,13 @@ function sendNextRequest(cb) {
 
 function getRandomIndex(max) {
   return Math.floor(Math.random() * Math.floor(max));
+}
+
+function recordResponses(name, version) {
+  if (!resultHash[version]) {
+    resultHash[version] = 1;
+  } else {
+    resultHash[version]++;
+  }
+  console.log(resultHash);
 }
